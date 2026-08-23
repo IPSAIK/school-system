@@ -14,11 +14,10 @@
 </head>
 <body class="bg-slate-50 min-h-screen pb-12">
 
-    <!-- Header Section (Dark Navy Top Banner) -->
-    <header class="bg-[#0b1329] text-white shadow-lg sticky top-0 z-50">
+    <!-- Top Banner (Dark Navy) -->
+    <header class="bg-[#0b1329] text-white shadow-lg sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
             
-            <!-- Left Side: Import & Export Buttons -->
             <div class="flex items-center gap-2">
                 <label class="cursor-pointer bg-blue-900/60 hover:bg-blue-800 text-white border border-blue-700/50 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-file-import text-blue-300"></i>
@@ -34,55 +33,32 @@
                 </button>
             </div>
 
-            <!-- Right Side: Title & Correct IPS Logo -->
             <div class="flex items-center gap-4">
                 <div class="text-right">
                     <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 justify-end">
                         نظام انضباط وتقييم الفصل
                     </h1>
                     <span class="block text-xs font-bold text-slate-300">Class Discipline & Evaluation System</span>
-                    <p class="text-[11px] text-slate-400 mt-0.5">
-                        توثيق البطاقات والدرجات بالوقت والتاريخ | Real-time Cards & Grade Logging
-                    </p>
                 </div>
 
-                <!-- Updated IPS Logo Matching Original Design -->
+                <!-- Logo Circle -->
                 <div class="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-16 h-16 shrink-0 border border-amber-200">
                     <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Upper Arc Text -->
-                        <path id="textArc" d="M 32,100 A 68,68 0 0,1 168,100" fill="none"/>
-                        <text font-size="10" font-family="'Inter', sans-serif" font-weight="700" fill="#0b1329" text-anchor="middle">
+                        <path id="textArc" d="M 30,100 A 70,70 0 0,1 170,100" fill="none"/>
+                        <text font-size="10.5" font-family="'Inter', sans-serif" font-weight="800" fill="#0b1329" text-anchor="middle">
                             <textPath href="#textArc" startOffset="50%">The International Programs School</textPath>
                         </text>
-
-                        <!-- Detailed Olive Wreath Leaves (Left Side) -->
                         <g fill="#c59b27">
-                            <path d="M 52,55 C 44,53 38,62 46,68 C 50,62 55,60 52,55 Z"/>
-                            <path d="M 44,68 C 36,68 32,78 42,82 C 44,76 49,72 44,68 Z"/>
-                            <path d="M 42,84 C 34,86 32,96 42,98 C 43,92 47,88 42,84 Z"/>
-                            <path d="M 44,100 C 37,104 38,114 48,114 C 47,108 50,103 44,100 Z"/>
-                            <path d="M 50,116 C 45,122 49,131 58,127 C 55,121 57,117 50,116 Z"/>
+                            <path d="M 50,55 Q 35,75 50,95 Q 60,75 50,55 Z"/>
+                            <path d="M 40,70 Q 25,90 40,110 Q 50,90 40,70 Z"/>
+                            <path d="M 150,55 Q 165,75 150,95 Q 140,75 150,55 Z"/>
+                            <path d="M 160,70 Q 175,90 160,110 Q 150,90 160,70 Z"/>
                         </g>
-
-                        <!-- Detailed Olive Wreath Leaves (Right Side) -->
-                        <g fill="#c59b27">
-                            <path d="M 148,55 C 156,53 162,62 154,68 C 150,62 145,60 148,55 Z"/>
-                            <path d="M 156,68 C 164,68 168,78 158,82 C 156,76 151,72 156,68 Z"/>
-                            <path d="M 158,84 C 166,86 168,96 158,98 C 157,92 153,88 158,84 Z"/>
-                            <path d="M 156,100 C 163,104 162,114 152,114 C 153,108 150,103 156,100 Z"/>
-                            <path d="M 150,116 C 155,122 151,131 142,127 C 145,121 143,117 150,116 Z"/>
-                        </g>
-
-                        <!-- Inner Center IPS Monogram -->
-                        <text x="100" y="116" font-family="'Inter', sans-serif" font-weight="900" font-size="50" fill="#0b1329" text-anchor="middle" letter-spacing="-1.5">IPS</text>
-
-                        <!-- Bottom Curve Line & Dot -->
-                        <path d="M 45,118 Q 100,165 155,118" fill="none" stroke="#0b1329" stroke-width="2.5" stroke-linecap="round"/>
-                        <circle cx="100" cy="144" r="4.5" fill="#0b1329"/>
-
-                        <!-- Bottom Text -->
+                        <text x="100" y="118" font-family="'Inter', sans-serif" font-weight="900" font-size="48" fill="#0b1329" text-anchor="middle" letter-spacing="-1">IPS</text>
+                        <path d="M 45,122 Q 100,165 155,122" fill="none" stroke="#0b1329" stroke-width="2.5"/>
+                        <circle cx="100" cy="144" r="4" fill="#0b1329"/>
                         <text x="100" y="156" font-family="'Inter', sans-serif" font-weight="700" font-size="8" fill="#0b1329" text-anchor="middle">Al Khobar</text>
-                        <text x="100" y="171" font-family="'Cairo', sans-serif" font-weight="800" font-size="9" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
+                        <text x="100" y="170" font-family="'Cairo', sans-serif" font-weight="800" font-size="9" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
                     </svg>
                 </div>
             </div>
@@ -90,11 +66,11 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- Real-time Activity Log (Left Column) -->
+            <!-- Log Panel -->
             <div class="space-y-4">
                 <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-2">
@@ -104,31 +80,21 @@
                         </h2>
                         <span class="text-[10px] text-slate-400 font-mono">Real-time Log</span>
                     </div>
-                    <p class="text-[10px] text-slate-400 mb-4">Activity & Grade Timestamps</p>
 
-                    <div id="logContainer" class="space-y-2 max-h-[550px] overflow-y-auto pr-1 text-xs">
-                        <div class="text-center text-slate-400 py-16">
-                            <p class="font-bold">لا توجد سجلات بعد</p>
-                            <span class="text-[10px]">No logs recorded yet</span>
-                        </div>
-                    </div>
+                    <div id="logContainer" class="space-y-2 max-h-[550px] overflow-y-auto pr-1 text-xs"></div>
                 </div>
             </div>
 
-            <!-- Student Roster (Right Column) -->
+            <!-- Student Cards Panel -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
-                        <h2 class="font-extrabold text-slate-900 text-base">
-                            قائمة الطلاب | Student Roster
-                        </h2>
+                        <h2 class="font-extrabold text-slate-900 text-base">قائمة الطلاب | Student Roster</h2>
                         <p class="text-xs text-slate-500 font-semibold mt-0.5">
-                            إجمالي الطلاب: <span id="studentCount" class="text-blue-900 font-bold">0</span> | Total Students
+                            إجمالي الطلاب: <span id="studentCount" class="text-blue-900 font-bold">0</span>
                         </p>
                     </div>
-                    <div class="w-full sm:w-auto">
-                        <input type="text" id="searchInput" oninput="renderStudents()" placeholder="بحث باسم الطالب أو ID..." class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900">
-                    </div>
+                    <input type="text" id="searchInput" oninput="renderStudents()" placeholder="بحث باسم الطالب أو ID..." class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900">
                 </div>
 
                 <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
@@ -137,35 +103,82 @@
         </div>
     </main>
 
+    <!-- Action Modal for Reason Selection -->
+    <div id="actionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="modalTitle" class="font-extrabold text-slate-900 text-sm">تسجيل إجراء للطالب</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <p id="modalStudentName" class="text-xs font-bold text-blue-900"></p>
+
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-700 block">اختر سبب الإجراء أو حدده:</label>
+                <select id="reasonSelect" onchange="toggleCustomReason()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-blue-900 outline-none">
+                    <!-- Populated dynamically -->
+                </select>
+                <input type="text" id="customReason" placeholder="اكتب السبب المخصص هنا..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 hidden focus:ring-2 focus:ring-blue-900 outline-none mt-2">
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="confirmCardAction()" class="flex-1 bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-xs transition">حفظ السجل</button>
+                <button onclick="closeModal()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Notification Banner / Modal -->
+    <div id="emailNotice" class="fixed bottom-5 left-5 bg-emerald-900 text-white p-4 rounded-2xl shadow-2xl border border-emerald-700 hidden z-50 max-w-sm space-y-2">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-envelope-circle-check text-emerald-300 text-xl"></i>
+            <h4 class="font-bold text-xs">إشعار تميز واستحقاق بريد!</h4>
+        </div>
+        <p id="emailNoticeText" class="text-[11px] text-emerald-100"></p>
+        <div class="flex justify-end gap-2 pt-1">
+            <button onclick="sendEmailAlert()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-[11px] transition">إرسال إيميل تكريم</button>
+            <button onclick="document.getElementById('emailNotice').classList.add('hidden')" class="text-xs text-emerald-300 px-2">إغلاق</button>
+        </div>
+    </div>
+
     <script>
         const initialStudents = [
-            { id: "11216", name: "Arsalan Latif", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11501", name: "Humza Usman", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12637", name: "Abdul Moiz", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12803", name: "Abdullah Zeeshan", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13743", name: "Arka Albriza", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13837", name: "Ayyub Taghiyev", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13468", name: "Yousef Al Ansari", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11289", name: "Yousuf Bahlool", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11961", name: "Zaid Khandakji", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12454", name: "Adam Itani", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12562", name: "Abdullah Alsanie", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13393", name: "Saim Khan", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13569", name: "Ferris Belkerdid", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13964", name: "Yahia Elghannam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14017", name: "Juman Moati", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14274", name: "Mehmet Ozyilmaz", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14306", name: "Owais Azzam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14302", name: "Ayham Azzam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14426", name: "Abdullah Fahad", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "00810", name: "Shayan Hussain", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14454", name: "Jandre Zakula", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14423", name: "Seyun Kim", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14147", name: "Zaid Alanani", score: 20, green: 0, yellow: 0, red: 0 }
+            { id: "11216", name: "Arsalan Latif", score: 20, green: 0, yellow: 0, red: 0, email: "arsalan@ips.edu.sa" },
+            { id: "11501", name: "Humza Usman", score: 20, green: 0, yellow: 0, red: 0, email: "humza@ips.edu.sa" },
+            { id: "12637", name: "Abdul Moiz", score: 20, green: 0, yellow: 0, red: 0, email: "moiz@ips.edu.sa" },
+            { id: "12803", name: "Abdullah Zeeshan", score: 20, green: 0, yellow: 0, red: 0, email: "zeeshan@ips.edu.sa" },
+            { id: "13743", name: "Arka Albriza", score: 20, green: 0, yellow: 0, red: 0, email: "arka@ips.edu.sa" },
+            { id: "13837", name: "Ayyub Taghiyev", score: 20, green: 0, yellow: 0, red: 0, email: "ayyub@ips.edu.sa" },
+            { id: "13468", name: "Yousef Al Ansari", score: 20, green: 0, yellow: 0, red: 0, email: "yousef@ips.edu.sa" },
+            { id: "11289", name: "Yousuf Bahlool", score: 20, green: 0, yellow: 0, red: 0, email: "bahlool@ips.edu.sa" },
+            { id: "11961", name: "Zaid Khandakji", score: 20, green: 0, yellow: 0, red: 0, email: "zaid.k@ips.edu.sa" },
+            { id: "12454", name: "Adam Itani", score: 20, green: 0, yellow: 0, red: 0, email: "adam@ips.edu.sa" },
+            { id: "12562", name: "Abdullah Alsanie", score: 20, green: 0, yellow: 0, red: 0, email: "sanie@ips.edu.sa" },
+            { id: "13393", name: "Saim Khan", score: 20, green: 0, yellow: 0, red: 0, email: "saim@ips.edu.sa" },
+            { id: "13569", name: "Ferris Belkerdid", score: 20, green: 0, yellow: 0, red: 0, email: "ferris@ips.edu.sa" },
+            { id: "13964", name: "Yahia Elghannam", score: 20, green: 0, yellow: 0, red: 0, email: "yahia@ips.edu.sa" },
+            { id: "14017", name: "Juman Moati", score: 20, green: 0, yellow: 0, red: 0, email: "juman@ips.edu.sa" },
+            { id: "14274", name: "Mehmet Ozyilmaz", score: 20, green: 0, yellow: 0, red: 0, email: "mehmet@ips.edu.sa" },
+            { id: "14306", name: "Owais Azzam", score: 20, green: 0, yellow: 0, red: 0, email: "owais@ips.edu.sa" },
+            { id: "14302", name: "Ayham Azzam", score: 20, green: 0, yellow: 0, red: 0, email: "ayham@ips.edu.sa" },
+            { id: "14426", name: "Abdullah Fahad", score: 20, green: 0, yellow: 0, red: 0, email: "fahad@ips.edu.sa" },
+            { id: "00810", name: "Shayan Hussain", score: 20, green: 0, yellow: 0, red: 0, email: "shayan@ips.edu.sa" },
+            { id: "14454", name: "Jandre Zakula", score: 20, green: 0, yellow: 0, red: 0, email: "jandre@ips.edu.sa" },
+            { id: "14423", name: "Seyun Kim", score: 20, green: 0, yellow: 0, red: 0, email: "seyun@ips.edu.sa" },
+            { id: "14147", name: "Zaid Alanani", score: 20, green: 0, yellow: 0, red: 0, email: "alanani@ips.edu.sa" }
         ];
+
+        const reasons = {
+            green: ["مشاركة متميزة بالكرتون/الحصة", "حل الواجب بكفاءة عالية", "مساعدة الزملاء والانضباط", "إجابة نموذجية على سؤال صعب", "سبب آخر..."],
+            yellow: ["تشتت أو تحدث أثناء الشرح", "عدم إحضار الكتاب/الأدوات", "تأخر عن الحصة", "عدم حل الواجب اليومي", "سبب آخر..."],
+            red: ["إزعاج متكرر وتخريب الحصة", "سلوك غير لائق تجاه الزملاء", "تكرار المخالفات السلوكية", "سبب آخر..."]
+        };
 
         let students = JSON.parse(localStorage.getItem('ips_students')) || initialStudents;
         let logs = JSON.parse(localStorage.getItem('ips_logs')) || [];
+
+        let currentActiveAction = { studentId: null, type: null };
+        let lastNotifiedStudent = null;
 
         function saveState() {
             localStorage.setItem('ips_students', JSON.stringify(students));
@@ -206,13 +219,13 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-1.5 text-center text-[11px] font-bold">
-                            <button onclick="addCard('${student.id}', 'green')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition active:scale-95">
+                            <button onclick="openActionModal('${student.id}', 'green')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition active:scale-95">
                                 الممتازة (${student.green}) 🟢
                             </button>
-                            <button onclick="addCard('${student.id}', 'yellow')" class="py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg transition active:scale-95">
+                            <button onclick="openActionModal('${student.id}', 'yellow')" class="py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg transition active:scale-95">
                                 تنبيه (${student.yellow}) 🟡
                             </button>
-                            <button onclick="addCard('${student.id}', 'red')" class="py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-lg transition active:scale-95">
+                            <button onclick="openActionModal('${student.id}', 'red')" class="py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-lg transition active:scale-95">
                                 مخالفة (${student.red}) 🔴
                             </button>
                         </div>
@@ -221,9 +234,47 @@
             });
         }
 
-        function addCard(studentId, type) {
+        function openActionModal(studentId, type) {
             const student = students.find(s => String(s.id) === String(studentId));
             if (!student) return;
+
+            currentActiveAction = { studentId, type };
+
+            document.getElementById('modalStudentName').innerText = `الطالب: ${student.name} (${student.id})`;
+            
+            const select = document.getElementById('reasonSelect');
+            select.innerHTML = reasons[type].map(r => `<option value="${r}">${r}</option>`).join('');
+            
+            document.getElementById('customReason').classList.add('hidden');
+            document.getElementById('customReason').value = '';
+
+            document.getElementById('actionModal').classList.remove('hidden');
+        }
+
+        function toggleCustomReason() {
+            const select = document.getElementById('reasonSelect');
+            const customInput = document.getElementById('customReason');
+            if (select.value === "سبب آخر...") {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('actionModal').classList.add('hidden');
+        }
+
+        function confirmCardAction() {
+            const { studentId, type } = currentActiveAction;
+            const student = students.find(s => String(s.id) === String(studentId));
+            if (!student) return;
+
+            const select = document.getElementById('reasonSelect');
+            const customInput = document.getElementById('customReason');
+            
+            let chosenReason = select.value === "سبب آخر..." ? customInput.value.trim() : select.value;
+            if (!chosenReason) chosenReason = "بدون سبب محدد";
 
             const now = new Date();
             const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -234,24 +285,42 @@
             if (type === 'green') {
                 student.green++;
                 student.score += 1;
-                actionText = "بطاقة إيجابية (+1) | Green Card";
+                actionText = `بطاقة إيجابية (+1) - ${chosenReason}`;
                 borderClass = "border-emerald-500 text-emerald-900";
+
+                // Trigger Email Badge Notice if student reaches 2+ Green Cards
+                if (student.green >= 2) {
+                    lastNotifiedStudent = student;
+                    document.getElementById('emailNoticeText').innerText = `حصل الطالب ${student.name} على ${student.green} بطاقات ممتازة! يمكنك الآن إرسال إشعار تكريم لبريده الإلكتروني.`;
+                    document.getElementById('emailNotice').classList.remove('hidden');
+                }
             } else if (type === 'yellow') {
                 student.yellow++;
                 student.score -= 1;
-                actionText = "بطاقة تنبيه (-1) | Yellow Card";
+                actionText = `بطاقة تنبيه (-1) - ${chosenReason}`;
                 borderClass = "border-amber-500 text-amber-900";
             } else if (type === 'red') {
                 student.red++;
                 student.score -= 2;
-                actionText = "بطاقة مخالفة (-2) | Red Card";
+                actionText = `بطاقة مخالفة (-2) - ${chosenReason}`;
                 borderClass = "border-rose-500 text-rose-900";
             }
 
             logs.unshift({ studentName: student.name, action: actionText, time: timestamp, borderClass: borderClass });
+            
             saveState();
+            closeModal();
             renderStudents();
             renderLogs();
+        }
+
+        function sendEmailAlert() {
+            if (!lastNotifiedStudent) return;
+            const subject = encodeURIComponent("شهادة إشادة وتميز دراسي - مدرسة البرامج العالمية");
+            const body = encodeURIComponent(`عزيزي الطالب ${lastNotifiedStudent.name}،\n\nنحييك على أدائك المتميز في الفصل وحصولك على ${lastNotifiedStudent.green} بطاقات إيجابية!\nاستمر في هذا العطاء المتميز.\n\nإدارة مدرسة البرامج العالمية (IPS)`);
+            
+            window.open(`mailto:${lastNotifiedStudent.email}?subject=${subject}&body=${body}`, '_blank');
+            document.getElementById('emailNotice').classList.add('hidden');
         }
 
         function renderLogs() {
@@ -265,7 +334,7 @@
                 <div class="p-2.5 bg-slate-50 rounded-xl border-r-4 ${log.borderClass || 'border-blue-900'} flex justify-between items-center text-xs border border-slate-200 shadow-sm">
                     <div>
                         <span class="font-bold text-slate-800">${log.studentName}</span>
-                        <p class="font-semibold text-[11px]">${log.action}</p>
+                        <p class="font-semibold text-[11px] text-slate-600">${log.action}</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-mono">${log.time}</span>
                 </div>
@@ -290,7 +359,8 @@
                         score: Number(r.Score || r.score || r["الدرجة"] || 20),
                         green: Number(r.Green || r.green || 0),
                         yellow: Number(r.Yellow || r.yellow || 0),
-                        red: Number(r.Red || r.red || 0)
+                        red: Number(r.Red || r.red || 0),
+                        email: r.Email || r.email || "student@ips.edu.sa"
                     }));
 
                     logs = [];
