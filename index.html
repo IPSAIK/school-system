@@ -3,406 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام انضباط وتقييم الفصل | Class Discipline & Evaluation System</title>
+    <title>نظام الانضباط الموحد | Unified Behavior System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-12">
 
-    <!-- Top Banner (Dark Navy) -->
-    <header class="bg-[#0b1329] text-white shadow-lg sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <!-- Header Section / الهيدر مع اللوقو المدمج -->
+    <header class="bg-slate-800 border-b border-slate-700 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             
-            <div class="flex items-center gap-2">
-                <label class="cursor-pointer bg-blue-900/60 hover:bg-blue-800 text-white border border-blue-700/50 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-file-import text-blue-300"></i>
-                    <span>استيراد قائمة (Excel)</span>
-                    <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
-                </label>
-                <button onclick="exportExcel()" class="bg-emerald-900/60 hover:bg-emerald-800 text-white border border-emerald-700/50 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-file-export text-emerald-300"></i>
-                    <span>تصدير البيانات</span>
-                </button>
-                <button onclick="resetData()" class="bg-rose-900/40 hover:bg-rose-800 text-rose-200 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 border border-rose-700/50 shadow-sm" title="إعادة ضبط">
-                    <i class="fa-solid fa-rotate-right"></i>
-                </button>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="text-right">
-                    <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 justify-end">
-                        نظام انضباط وتقييم الفصل
-                    </h1>
-                    <span class="block text-xs font-bold text-slate-300">Class Discipline & Evaluation System</span>
-                </div>
-
-                <!-- Logo Circle -->
-                <div class="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-16 h-16 shrink-0 border border-amber-200">
-                    <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <path id="textArc" d="M 30,100 A 70,70 0 0,1 170,100" fill="none"/>
-                        <text font-size="10.5" font-family="'Inter', sans-serif" font-weight="800" fill="#0b1329" text-anchor="middle">
-                            <textPath href="#textArc" startOffset="50%">The International Programs School</textPath>
-                        </text>
-                        <g fill="#c59b27">
-                            <path d="M 50,55 Q 35,75 50,95 Q 60,75 50,55 Z"/>
-                            <path d="M 40,70 Q 25,90 40,110 Q 50,90 40,70 Z"/>
-                            <path d="M 150,55 Q 165,75 150,95 Q 140,75 150,55 Z"/>
-                            <path d="M 160,70 Q 175,90 160,110 Q 150,90 160,70 Z"/>
-                        </g>
-                        <text x="100" y="118" font-family="'Inter', sans-serif" font-weight="900" font-size="48" fill="#0b1329" text-anchor="middle" letter-spacing="-1">IPS</text>
-                        <path d="M 45,122 Q 100,165 155,122" fill="none" stroke="#0b1329" stroke-width="2.5"/>
-                        <circle cx="100" cy="144" r="4" fill="#0b1329"/>
-                        <text x="100" y="156" font-family="'Inter', sans-serif" font-weight="700" font-size="8" fill="#0b1329" text-anchor="middle">Al Khobar</text>
-                        <text x="100" y="170" font-family="'Cairo', sans-serif" font-weight="800" font-size="9" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
+            <div class="flex items-center gap-3">
+                <!-- IPS Logo Container -->
+                <div class="bg-white p-1 rounded-lg border border-slate-600 flex items-center justify-center shadow">
+                    <svg width="42" height="42" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 10 C50 10 10 50 10 100 C10 150 50 190 100 190 C150 190 190 150 190 100 C190 50 150 10 100 10 Z" fill="#FFFFFF"/>
+                        <path d="M100 25 C135 25 165 45 175 75 C160 60 130 50 100 50 C70 50 40 60 25 75 C35 45 65 25 100 25 Z" fill="#03254C"/>
+                        <text x="100" y="115" font-family="Arial, sans-serif" font-weight="900" font-size="48" fill="#113F67" text-anchor="middle">IPS</text>
+                        <path d="M40 130 C60 155 140 155 160 130" stroke="#B8860B" stroke-width="6" fill="none"/>
+                        <text x="100" y="175" font-family="Cairo, sans-serif" font-weight="bold" font-size="12" fill="#113F67" text-anchor="middle">مدرسة البرامج العالمية</text>
                     </svg>
                 </div>
+
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                        نظام الانضباط الموحد <span class="text-slate-400 font-normal">| Unified Behavior System</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">الصفوف 9 - 12 | Grades 9 - 12 (Islamic Studies & KSA Studies)</p>
+                </div>
             </div>
 
+            <!-- Subject Selector & Export Actions -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg">التربية الإسلامية | Islamic</span>
+                <span class="bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">الدراسات السعودية | KSA</span>
+                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                    <i class="fa-solid fa-file-excel"></i> تصدير Excel | Export
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Log Panel -->
-            <div class="space-y-4">
-                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-2">
-                        <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-clock-rotate-left text-blue-900"></i>
-                            سجل الأنشطة والمخالفات
-                        </h2>
-                        <span class="text-[10px] text-slate-400 font-mono">Real-time Log</span>
-                    </div>
-
-                    <div id="logContainer" class="space-y-2 max-h-[550px] overflow-y-auto pr-1 text-xs"></div>
-                </div>
+    <!-- Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        
+        <!-- Controls Bar -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث بالاسم أو الرقم... / Search by name or ID..." class="w-full md:w-80 bg-slate-900 border border-slate-600 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-blue-500">
             </div>
 
-            <!-- Student Cards Panel -->
-            <div class="lg:col-span-2 space-y-4">
-                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div>
-                        <h2 class="font-extrabold text-slate-900 text-base">قائمة الطلاب | Student Roster</h2>
-                        <p class="text-xs text-slate-500 font-semibold mt-0.5">
-                            إجمالي الطلاب: <span id="studentCount" class="text-blue-900 font-bold">0</span>
-                        </p>
-                    </div>
-                    <input type="text" id="searchInput" oninput="renderStudents()" placeholder="بحث باسم الطالب أو ID..." class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900">
-                </div>
-
-                <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 w-full justify-center">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>رفع ملف | Upload File (Excel)</span>
+                    <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
+                </label>
             </div>
-
         </div>
+
+        <!-- Dashboard Metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl">
+                <span class="text-xs text-slate-400 block">إجمالي الطلاب | Total Students</span>
+                <span id="studentCount" class="text-xl font-bold text-white">23</span>
+            </div>
+            <div class="bg-slate-800 border border-emerald-500/30 p-3 rounded-xl">
+                <span class="text-xs text-emerald-400 block">بطاقات خضراء | Green (+1.0)</span>
+                <span id="greenCount" class="text-xl font-bold text-emerald-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-amber-500/30 p-3 rounded-xl">
+                <span class="text-xs text-amber-400 block">بطاقات صفراء | Yellow (-0.5)</span>
+                <span id="yellowCount" class="text-xl font-bold text-amber-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-rose-500/30 p-3 rounded-xl">
+                <span class="text-xs text-rose-400 block">بطاقات حمراء | Red (-1.0)</span>
+                <span id="redCount" class="text-xl font-bold text-rose-400">0</span>
+            </div>
+        </div>
+
+        <!-- Student Cards Section -->
+        <div id="studentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dynamically Rendered Student Cards -->
+        </div>
+
     </main>
 
-    <!-- Action Modal for Reason Selection -->
-    <div id="actionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modalTitle" class="font-extrabold text-slate-900 text-sm">تسجيل إجراء للطالب</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            
-            <p id="modalStudentName" class="text-xs font-bold text-blue-900"></p>
-
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-slate-700 block">اختر سبب الإجراء أو حدده:</label>
-                <select id="reasonSelect" onchange="toggleCustomReason()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-blue-900 outline-none">
-                    <!-- Populated dynamically -->
-                </select>
-                <input type="text" id="customReason" placeholder="اكتب السبب المخصص هنا..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 hidden focus:ring-2 focus:ring-blue-900 outline-none mt-2">
-            </div>
-
-            <div class="flex gap-2 pt-2">
-                <button onclick="confirmCardAction()" class="flex-1 bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded-xl text-xs transition">حفظ السجل</button>
-                <button onclick="closeModal()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Email Notification Banner / Modal -->
-    <div id="emailNotice" class="fixed bottom-5 left-5 bg-emerald-900 text-white p-4 rounded-2xl shadow-2xl border border-emerald-700 hidden z-50 max-w-sm space-y-2">
-        <div class="flex items-center gap-2">
-            <i class="fa-solid fa-envelope-circle-check text-emerald-300 text-xl"></i>
-            <h4 class="font-bold text-xs">إشعار تميز واستحقاق بريد!</h4>
-        </div>
-        <p id="emailNoticeText" class="text-[11px] text-emerald-100"></p>
-        <div class="flex justify-end gap-2 pt-1">
-            <button onclick="sendEmailAlert()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-[11px] transition">إرسال إيميل تكريم</button>
-            <button onclick="document.getElementById('emailNotice').classList.add('hidden')" class="text-xs text-emerald-300 px-2">إغلاق</button>
-        </div>
-    </div>
-
     <script>
-        const initialStudents = [
-            { id: "11216", name: "Arsalan Latif", score: 20, green: 0, yellow: 0, red: 0, email: "arsalan@ips.edu.sa" },
-            { id: "11501", name: "Humza Usman", score: 20, green: 0, yellow: 0, red: 0, email: "humza@ips.edu.sa" },
-            { id: "12637", name: "Abdul Moiz", score: 20, green: 0, yellow: 0, red: 0, email: "moiz@ips.edu.sa" },
-            { id: "12803", name: "Abdullah Zeeshan", score: 20, green: 0, yellow: 0, red: 0, email: "zeeshan@ips.edu.sa" },
-            { id: "13743", name: "Arka Albriza", score: 20, green: 0, yellow: 0, red: 0, email: "arka@ips.edu.sa" },
-            { id: "13837", name: "Ayyub Taghiyev", score: 20, green: 0, yellow: 0, red: 0, email: "ayyub@ips.edu.sa" },
-            { id: "13468", name: "Yousef Al Ansari", score: 20, green: 0, yellow: 0, red: 0, email: "yousef@ips.edu.sa" },
-            { id: "11289", name: "Yousuf Bahlool", score: 20, green: 0, yellow: 0, red: 0, email: "bahlool@ips.edu.sa" },
-            { id: "11961", name: "Zaid Khandakji", score: 20, green: 0, yellow: 0, red: 0, email: "zaid.k@ips.edu.sa" },
-            { id: "12454", name: "Adam Itani", score: 20, green: 0, yellow: 0, red: 0, email: "adam@ips.edu.sa" },
-            { id: "12562", name: "Abdullah Alsanie", score: 20, green: 0, yellow: 0, red: 0, email: "sanie@ips.edu.sa" },
-            { id: "13393", name: "Saim Khan", score: 20, green: 0, yellow: 0, red: 0, email: "saim@ips.edu.sa" },
-            { id: "13569", name: "Ferris Belkerdid", score: 20, green: 0, yellow: 0, red: 0, email: "ferris@ips.edu.sa" },
-            { id: "13964", name: "Yahia Elghannam", score: 20, green: 0, yellow: 0, red: 0, email: "yahia@ips.edu.sa" },
-            { id: "14017", name: "Juman Moati", score: 20, green: 0, yellow: 0, red: 0, email: "juman@ips.edu.sa" },
-            { id: "14274", name: "Mehmet Ozyilmaz", score: 20, green: 0, yellow: 0, red: 0, email: "mehmet@ips.edu.sa" },
-            { id: "14306", name: "Owais Azzam", score: 20, green: 0, yellow: 0, red: 0, email: "owais@ips.edu.sa" },
-            { id: "14302", name: "Ayham Azzam", score: 20, green: 0, yellow: 0, red: 0, email: "ayham@ips.edu.sa" },
-            { id: "14426", name: "Abdullah Fahad", score: 20, green: 0, yellow: 0, red: 0, email: "fahad@ips.edu.sa" },
-            { id: "00810", name: "Shayan Hussain", score: 20, green: 0, yellow: 0, red: 0, email: "shayan@ips.edu.sa" },
-            { id: "14454", name: "Jandre Zakula", score: 20, green: 0, yellow: 0, red: 0, email: "jandre@ips.edu.sa" },
-            { id: "14423", name: "Seyun Kim", score: 20, green: 0, yellow: 0, red: 0, email: "seyun@ips.edu.sa" },
-            { id: "14147", name: "Zaid Alanani", score: 20, green: 0, yellow: 0, red: 0, email: "alanani@ips.edu.sa" }
+        // Student Data
+        let students = [
+            { id: "11216", name: "Arsalan Latif", score: 20 },
+            { id: "11501", name: "Humza Usman", score: 20 },
+            { id: "12637", name: "Abdul Moiz", score: 20 },
+            { id: "12803", name: "Abdullah Zeeshan", score: 20 },
+            { id: "13743", name: "Arka Albriza", score: 20 },
+            { id: "13837", name: "Ayyub Abdulmetin Taghiyev", score: 20 },
+            { id: "13468", name: "Yousef Al Ansari", score: 20 },
+            { id: "11289", name: "Yousuf Bahlool", score: 20 },
+            { id: "11961", name: "Zaid Khandakji", score: 20 },
+            { id: "12454", name: "Adam Itani", score: 20 },
+            { id: "12562", name: "Abdullah Alsanie", score: 20 },
+            { id: "13393", name: "Saim Khan", score: 20 },
+            { id: "13569", name: "Ferris Belkerdid", score: 20 },
+            { id: "13964", name: "Yahia Elghannam", score: 20 },
+            { id: "14017", name: "Juman Moati", score: 20 },
+            { id: "14274", name: "Mehmet Ozyilmaz", score: 20 },
+            { id: "14306", name: "Owais Azzam", score: 20 },
+            { id: "14302", name: "Ayham Azzam", score: 20 },
+            { id: "14426", name: "Abdullah Fahad", score: 20 },
+            { id: "00810", name: "Shayan Hussain", score: 20 },
+            { id: "14454", name: "Jandre Zakula", score: 20 },
+            { id: "14423", name: "Seyun Kim", score: 20 },
+            { id: "14147", name: "Zaid Alanani", score: 20 }
         ];
 
-        const reasons = {
-            green: ["مشاركة متميزة بالكرتون/الحصة", "حل الواجب بكفاءة عالية", "مساعدة الزملاء والانضباط", "إجابة نموذجية على سؤال صعب", "سبب آخر..."],
-            yellow: ["تشتت أو تحدث أثناء الشرح", "عدم إحضار الكتاب/الأدوات", "تأخر عن الحصة", "عدم حل الواجب اليومي", "سبب آخر..."],
-            red: ["إزعاج متكرر وتخريب الحصة", "سلوك غير لائق تجاه الزملاء", "تكرار المخالفات السلوكية", "سبب آخر..."]
-        };
-
-        let students = JSON.parse(localStorage.getItem('ips_students')) || initialStudents;
-        let logs = JSON.parse(localStorage.getItem('ips_logs')) || [];
-
-        let currentActiveAction = { studentId: null, type: null };
-        let lastNotifiedStudent = null;
-
-        function saveState() {
-            localStorage.setItem('ips_students', JSON.stringify(students));
-            localStorage.setItem('ips_logs', JSON.stringify(logs));
-        }
-
-        function getScoreBadgeColor(score) {
-            if (score >= 20) return "text-emerald-600";
-            if (score >= 15) return "text-amber-600";
-            return "text-rose-600";
-        }
-
-        function renderStudents() {
+        function renderStudents(data = students) {
             const grid = document.getElementById('studentGrid');
-            const term = (document.getElementById('searchInput').value || '').toLowerCase().trim();
-            const filtered = students.filter(s => s.name.toLowerCase().includes(term) || String(s.id).includes(term));
-
-            document.getElementById('studentCount').innerText = filtered.length;
             grid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 py-10 bg-white rounded-2xl border border-slate-200">لا يوجد طلاب مطابقون للبحث</div>`;
-                return;
-            }
-
-            filtered.forEach(student => {
+            
+            data.forEach(student => {
                 grid.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                        <div class="flex justify-between items-start border-b border-slate-100 pb-2">
+                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 space-y-3 shadow-sm hover:border-slate-600 transition">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
                             <div>
-                                <span class="text-[10px] font-mono text-slate-400">ID: ${student.id}</span>
-                                <h3 class="font-bold text-slate-900 text-sm">${student.name}</h3>
+                                <h3 class="font-bold text-sm text-white">${student.name}</h3>
+                                <span class="text-[10px] text-slate-400 font-mono">رقم القيد | ID: ${student.id}</span>
                             </div>
-                            <div class="text-right">
-                                <span class="text-[10px] text-slate-400 block">الدرجة | Score</span>
-                                <span class="text-base font-bold font-mono ${getScoreBadgeColor(student.score)}">${student.score}</span>
-                            </div>
+                            <span class="text-xs bg-slate-700 text-slate-200 px-2 py-1 rounded">الصف 9 | Grade 9</span>
                         </div>
-
-                        <div class="grid grid-cols-3 gap-1.5 text-center text-[11px] font-bold">
-                            <button onclick="openActionModal('${student.id}', 'green')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition active:scale-95">
-                                الممتازة (${student.green}) 🟢
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400">الرصيد الحالي | Balance:</span>
+                            <span class="font-bold text-emerald-400">${student.score} / 20.0</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-[11px] font-semibold">
+                            <button class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-1.5 rounded transition">
+                                أخضر (+1.0)<br><span class="text-[9px] font-normal">Green</span>
                             </button>
-                            <button onclick="openActionModal('${student.id}', 'yellow')" class="py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg transition active:scale-95">
-                                تنبيه (${student.yellow}) 🟡
+                            <button class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 py-1.5 rounded transition">
+                                أصفر (-0.5)<br><span class="text-[9px] font-normal">Yellow</span>
                             </button>
-                            <button onclick="openActionModal('${student.id}', 'red')" class="py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-lg transition active:scale-95">
-                                مخالفة (${student.red}) 🔴
+                            <button class="bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 py-1.5 rounded transition">
+                                أحمر (-1.0)<br><span class="text-[9px] font-normal">Red</span>
                             </button>
                         </div>
                     </div>
                 `;
             });
+
+            document.getElementById('studentCount').innerText = data.length;
         }
 
-        function openActionModal(studentId, type) {
-            const student = students.find(s => String(s.id) === String(studentId));
-            if (!student) return;
-
-            currentActiveAction = { studentId, type };
-
-            document.getElementById('modalStudentName').innerText = `الطالب: ${student.name} (${student.id})`;
-            
-            const select = document.getElementById('reasonSelect');
-            select.innerHTML = reasons[type].map(r => `<option value="${r}">${r}</option>`).join('');
-            
-            document.getElementById('customReason').classList.add('hidden');
-            document.getElementById('customReason').value = '';
-
-            document.getElementById('actionModal').classList.remove('hidden');
-        }
-
-        function toggleCustomReason() {
-            const select = document.getElementById('reasonSelect');
-            const customInput = document.getElementById('customReason');
-            if (select.value === "سبب آخر...") {
-                customInput.classList.remove('hidden');
-            } else {
-                customInput.classList.add('hidden');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('actionModal').classList.add('hidden');
-        }
-
-        function confirmCardAction() {
-            const { studentId, type } = currentActiveAction;
-            const student = students.find(s => String(s.id) === String(studentId));
-            if (!student) return;
-
-            const select = document.getElementById('reasonSelect');
-            const customInput = document.getElementById('customReason');
-            
-            let chosenReason = select.value === "سبب آخر..." ? customInput.value.trim() : select.value;
-            if (!chosenReason) chosenReason = "بدون سبب محدد";
-
-            const now = new Date();
-            const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-            let actionText = "";
-            let borderClass = "";
-
-            if (type === 'green') {
-                student.green++;
-                student.score += 1;
-                actionText = `بطاقة إيجابية (+1) - ${chosenReason}`;
-                borderClass = "border-emerald-500 text-emerald-900";
-
-                // Trigger Email Badge Notice if student reaches 2+ Green Cards
-                if (student.green >= 2) {
-                    lastNotifiedStudent = student;
-                    document.getElementById('emailNoticeText').innerText = `حصل الطالب ${student.name} على ${student.green} بطاقات ممتازة! يمكنك الآن إرسال إشعار تكريم لبريده الإلكتروني.`;
-                    document.getElementById('emailNotice').classList.remove('hidden');
-                }
-            } else if (type === 'yellow') {
-                student.yellow++;
-                student.score -= 1;
-                actionText = `بطاقة تنبيه (-1) - ${chosenReason}`;
-                borderClass = "border-amber-500 text-amber-900";
-            } else if (type === 'red') {
-                student.red++;
-                student.score -= 2;
-                actionText = `بطاقة مخالفة (-2) - ${chosenReason}`;
-                borderClass = "border-rose-500 text-rose-900";
-            }
-
-            logs.unshift({ studentName: student.name, action: actionText, time: timestamp, borderClass: borderClass });
-            
-            saveState();
-            closeModal();
-            renderStudents();
-            renderLogs();
-        }
-
-        function sendEmailAlert() {
-            if (!lastNotifiedStudent) return;
-            const subject = encodeURIComponent("شهادة إشادة وتميز دراسي - مدرسة البرامج العالمية");
-            const body = encodeURIComponent(`عزيزي الطالب ${lastNotifiedStudent.name}،\n\nنحييك على أدائك المتميز في الفصل وحصولك على ${lastNotifiedStudent.green} بطاقات إيجابية!\nاستمر في هذا العطاء المتميز.\n\nإدارة مدرسة البرامج العالمية (IPS)`);
-            
-            window.open(`mailto:${lastNotifiedStudent.email}?subject=${subject}&body=${body}`, '_blank');
-            document.getElementById('emailNotice').classList.add('hidden');
-        }
-
-        function renderLogs() {
-            const container = document.getElementById('logContainer');
-            if (logs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-16"><p class="font-bold">لا توجد سجلات بعد</p><span class="text-[10px]">No logs recorded yet</span></div>`;
-                return;
-            }
-
-            container.innerHTML = logs.map(log => `
-                <div class="p-2.5 bg-slate-50 rounded-xl border-r-4 ${log.borderClass || 'border-blue-900'} flex justify-between items-center text-xs border border-slate-200 shadow-sm">
-                    <div>
-                        <span class="font-bold text-slate-800">${log.studentName}</span>
-                        <p class="font-semibold text-[11px] text-slate-600">${log.action}</p>
-                    </div>
-                    <span class="text-[10px] text-slate-400 font-mono">${log.time}</span>
-                </div>
-            `).join('');
-        }
-
-        function importExcel(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(sheet);
-
-                    students = json.map(r => ({
-                        id: String(r.ID || r.id || r["المعرف"] || Math.floor(Math.random() * 89999 + 10000)),
-                        name: r.Name || r.name || r["اسم الطالب"] || "Unknown Student",
-                        score: Number(r.Score || r.score || r["الدرجة"] || 20),
-                        green: Number(r.Green || r.green || 0),
-                        yellow: Number(r.Yellow || r.yellow || 0),
-                        red: Number(r.Red || r.red || 0),
-                        email: r.Email || r.email || "student@ips.edu.sa"
-                    }));
-
-                    logs = [];
-                    saveState();
-                    renderStudents();
-                    renderLogs();
-                    alert("تم استيراد قائمة الطلاب بنجاح!");
-                } catch (err) {
-                    alert("حدث خطأ أثناء قراءة الملف.");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function exportExcel() {
-            const exportData = students.map(s => ({
-                "ID / المعرف": s.id,
-                "Student Name / اسم الطالب": s.name,
-                "Score / الدرجة": s.score,
-                "Green Cards / بطاقات ممتازة": s.green,
-                "Yellow Cards / بطاقات تنبيه": s.yellow,
-                "Red Cards / بطاقات مخالفة": s.red
-            }));
-
-            const worksheet = XLSX.utils.json_to_sheet(exportData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Class Evaluation");
-            XLSX.writeFile(workbook, `Class_Discipline_Report_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        }
-
-        function resetData() {
-            if (confirm("هل أنت تأكد من إعادة ضبط البيانات؟")) {
-                students = JSON.parse(JSON.stringify(initialStudents));
-                logs = [];
-                saveState();
-                renderStudents();
-                renderLogs();
-            }
+        function filterStudents() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = students.filter(s => 
+                s.name.toLowerCase().includes(query) || s.id.includes(query)
+            );
+            renderStudents(filtered);
         }
 
         renderStudents();
-        renderLogs();
     </script>
 </body>
 </html>
