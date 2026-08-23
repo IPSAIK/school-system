@@ -55,13 +55,13 @@
                 <button onclick="resetAllScores()" class="bg-amber-500/10 hover:bg-amber-600 text-amber-400 hover:text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition border border-amber-500/30">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i> تصفير النقاط
                 </button>
-                <!-- زر مسح جميع الطلاب -->
+                <!-- زر مسح كافة الطلاب -->
                 <button onclick="deleteAllStudents()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition shadow">
                     <i data-lucide="trash-2" class="w-4 h-4"></i> مسح كافة الطلاب
                 </button>
-                <!-- زر التراجع عن المسح (يظهر عند مسح الطلاب) -->
-                <button id="undo-btn" onclick="undoDeleteAll()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-2 rounded-lg text-xs font-extrabold flex items-center gap-1 transition shadow animate-pulse">
-                    <i data-lucide="undo-2" class="w-4 h-4"></i> تراجع عن المسح
+                <!-- زر التراجع (يظهر مباشرة عند حدوث أي حذف) -->
+                <button id="undo-header-btn" onclick="restoreBackup()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-900 px-3.5 py-2 rounded-lg text-xs font-black flex items-center gap-1.5 transition shadow animate-pulse">
+                    <i data-lucide="undo-2" class="w-4 h-4"></i> تراجع عن الحذف
                 </button>
             </div>
         </div>
@@ -176,8 +176,8 @@
 
     <!-- Toast Notification للتراجع السريع -->
     <div id="toast-undo" class="fixed bottom-5 left-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-4 hidden border border-slate-700">
-        <span class="text-xs font-bold text-slate-200">تم مسح الطلاب من المادة الحالية.</span>
-        <button onclick="undoDeleteAll()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-1 rounded-lg text-xs font-black transition flex items-center gap-1">
+        <span id="toast-message" class="text-xs font-bold text-slate-200">تم مسح المحتوى.</span>
+        <button onclick="restoreBackup()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-1 rounded-lg text-xs font-black transition flex items-center gap-1">
             <i data-lucide="undo-2" class="w-3.5 h-3.5"></i> تراجع الآن
         </button>
     </div>
@@ -245,7 +245,7 @@
     <script>
         let currentSubject = 'islamic'; 
         let pendingCardAction = { studentId: null, cardType: null };
-        let deletedBackup = null; // الاحتفاظ بنسخة احتياطية للتراجع
+        let stateHistory = []; // سجل للتراجع Multi-level Backup
 
         const reasonsList = {
             green: [
@@ -282,6 +282,42 @@
         let currentEmailColor = null;
         let currentEmailLang = 'ar';
 
+        function saveSnapshot() {
+            stateHistory.push(JSON.stringify(appData));
+            if (stateHistory.length > 10) stateHistory.shift(); // الاحتفاظ بـ 10 خطوات للتراجع
+            showUndoButtons(true);
+        }
+
+        function restoreBackup() {
+            if (stateHistory.length === 0) return;
+            const previousState = stateHistory.pop();
+            appData = JSON.parse(previousState);
+            localStorage.setItem('school_data_v12', JSON.stringify(appData));
+            
+            renderStudents();
+            renderLogs();
+            updateStats();
+
+            if (stateHistory.length === 0) {
+                showUndoButtons(false);
+            }
+        }
+
+        function showUndoButtons(show, msg = "تم إجراء التغيير.") {
+            const undoHeader = document.getElementById('undo-header-btn');
+            const toast = document.getElementById('toast-undo');
+            const toastMsg = document.getElementById('toast-message');
+
+            if (show) {
+                undoHeader.classList.remove('hidden');
+                toastMsg.innerText = msg;
+                toast.classList.remove('hidden');
+            } else {
+                undoHeader.classList.add('hidden');
+                toast.classList.add('hidden');
+            }
+        }
+
         function switchSubject(subject) {
             currentSubject = subject;
             const islamicBtn = document.getElementById('subject-islamic-btn');
@@ -317,6 +353,8 @@
             const name = nameInput.value.trim();
             if(!name) { alert('يرجى إدخال اسم الطالب'); return; }
 
+            saveSnapshot();
+
             appData[currentSubject].students.push({
                 id: Date.now().toString(),
                 name: name,
@@ -330,7 +368,6 @@
             renderStudents();
         }
 
-        // مسح جميع الطلاب مع أخذ نسخة احتياطية
         function deleteAllStudents() {
             if (appData[currentSubject].students.length === 0) {
                 alert('القائمة فارغة بالفعل!');
@@ -338,44 +375,21 @@
             }
 
             if(confirm(`⚠️ هل أنت تأكد من مسح جميع الطلاب كلياً لمادة (${currentSubject.toUpperCase()})؟`)) {
-                // حفظ النسخة الاحتياطية للتراجع
-                deletedBackup = {
-                    subject: currentSubject,
-                    students: JSON.parse(JSON.stringify(appData[currentSubject].students)),
-                    logs: JSON.parse(JSON.stringify(appData[currentSubject].logs))
-                };
-
+                saveSnapshot();
                 appData[currentSubject].students = [];
                 appData[currentSubject].logs = [];
                 saveData();
                 renderStudents();
-
-                // إظهار أزرار التراجع
-                document.getElementById('undo-btn').classList.remove('hidden');
-                const toast = document.getElementById('toast-undo');
-                toast.classList.remove('hidden');
-
-                // إخفاء التنبيه التلقائي بعد 10 ثوانٍ
-                setTimeout(() => {
-                    toast.classList.add('hidden');
-                }, 10000);
+                showUndoButtons(true, "تم مسح كافة الطلاب.");
             }
         }
 
-        // دالة التراجع عن مسح الطلاب
-        function undoDeleteAll() {
-            if (!deletedBackup) return;
-
-            appData[deletedBackup.subject].students = deletedBackup.students;
-            appData[deletedBackup.subject].logs = deletedBackup.logs;
-            
-            deletedBackup = null;
-            saveData();
+        function removeStudent(id) {
+            saveSnapshot();
+            appData[currentSubject].students = appData[currentSubject].students.filter(s => s.id !== id);
+            saveData(); 
             renderStudents();
-
-            document.getElementById('undo-btn').classList.add('hidden');
-            document.getElementById('toast-undo').classList.add('hidden');
-            alert('تم استعادة جميع الطلاب والسجلات بنجاح!');
+            showUndoButtons(true, "تم حذف الطالب.");
         }
 
         function processExcelFile(file) {
@@ -385,6 +399,8 @@
                 const workbook = XLSX.read(data, { type: 'array' });
                 const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                 let count = 0;
+
+                saveSnapshot();
 
                 json.forEach((row) => {
                     let nameVal = '';
@@ -436,6 +452,7 @@
             reader.onload = function(e) {
                 mammoth.extractRawText({ arrayBuffer: e.target.result }).then(function(result) {
                     let count = 0;
+                    saveSnapshot();
                     result.value.split('\n').forEach(line => {
                         if (line.trim() && line.trim().length > 1) {
                             appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
@@ -452,6 +469,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 let count = 0;
+                saveSnapshot();
                 e.target.result.split('\n').forEach(line => {
                     if (line.trim() && line.trim().length > 1) {
                         appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
@@ -474,6 +492,7 @@
                     const workbook = XLSX.read(data, { type: 'array' });
                     const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                     let count = 0;
+                    saveSnapshot();
                     json.forEach((row) => {
                         if (row[0] && row[0].toString().trim().length > 1 && !row[0].toString().includes('اسم')) {
                             appData[currentSubject].students.push({
@@ -528,6 +547,8 @@
 
             const student = appData[currentSubject].students.find(s => s.id === studentId);
             if (!student) return;
+
+            saveSnapshot();
 
             let selectedReason = document.getElementById('reason-select').value;
             if (selectedReason === 'سبب آخر...') {
@@ -641,14 +662,8 @@
             navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`).then(() => alert('تم النسخ بنجاح!'));
         }
 
-        function removeStudent(id) {
-            if(confirm('هل أنت تأكد من حذف الطالب؟')) {
-                appData[currentSubject].students = appData[currentSubject].students.filter(s => s.id !== id);
-                saveData(); renderStudents();
-            }
-        }
-
         function updateStudentGrade(id, newGrade) {
+            saveSnapshot();
             const student = appData[currentSubject].students.find(s => s.id === id);
             if(student) { student.grade = newGrade; saveData(); }
         }
@@ -701,7 +716,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <button onclick="removeStudent('${student.id}')" class="text-slate-300 hover:text-rose-500 transition"><i data-lucide="x-circle" class="w-5 h-5"></i></button>
+                            <button onclick="removeStudent('${student.id}')" title="حذف الطالب" class="text-slate-300 hover:text-rose-500 transition p-1"><i data-lucide="x-circle" class="w-5 h-5"></i></button>
                         </div>
 
                         <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
@@ -854,6 +869,7 @@
 
         function resetAllScores() {
             if(confirm(`هل تريد تصفير النقاط والبطاقات لمادة (${currentSubject.toUpperCase()}) فقط؟`)) {
+                saveSnapshot();
                 appData[currentSubject].students.forEach(s => { s.score = 20.0; s.green = 0; s.yellow = 0; s.red = 0; });
                 appData[currentSubject].logs = [];
                 saveData();
