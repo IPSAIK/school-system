@@ -34,7 +34,7 @@
                 </button>
             </div>
 
-            <!-- Right Side: Title & Official IPS Logo -->
+            <!-- Right Side: Title & Correct IPS Logo -->
             <div class="flex items-center gap-4">
                 <div class="text-right">
                     <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 justify-end">
@@ -46,31 +46,43 @@
                     </p>
                 </div>
 
-                <!-- Exact Official IPS Logo Vector -->
-                <div class="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-16 h-16 shrink-0 border-2 border-amber-500/30">
+                <!-- Updated IPS Logo Matching Original Design -->
+                <div class="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-16 h-16 shrink-0 border border-amber-200">
                     <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                         <!-- Upper Arc Text -->
-                        <path id="textArcTop" d="M 30 100 A 70 70 0 0 1 170 100" fill="none"/>
-                        <text font-size="10.5" font-family="'Inter', sans-serif" font-weight="800" fill="#0b1329" text-anchor="middle">
-                            <textPath href="#textArcTop" startOffset="50%">The International Programs School</textPath>
+                        <path id="textArc" d="M 32,100 A 68,68 0 0,1 168,100" fill="none"/>
+                        <text font-size="10" font-family="'Inter', sans-serif" font-weight="700" fill="#0b1329" text-anchor="middle">
+                            <textPath href="#textArc" startOffset="50%">The International Programs School</textPath>
                         </text>
-                        
-                        <!-- Wreath / Olive Leaves (Gold) -->
+
+                        <!-- Detailed Olive Wreath Leaves (Left Side) -->
                         <g fill="#c59b27">
-                            <path d="M 45 110 C 35 90 40 60 65 45 C 55 60 55 85 52 105 Z"/>
-                            <path d="M 155 110 C 165 90 160 60 135 45 C 145 60 145 85 148 105 Z"/>
-                            <circle cx="58" cy="62" r="3"/><circle cx="50" cy="78" r="3"/><circle cx="48" cy="94" r="3"/>
-                            <circle cx="142" cy="62" r="3"/><circle cx="150" cy="78" r="3"/><circle cx="152" cy="94" r="3"/>
+                            <path d="M 52,55 C 44,53 38,62 46,68 C 50,62 55,60 52,55 Z"/>
+                            <path d="M 44,68 C 36,68 32,78 42,82 C 44,76 49,72 44,68 Z"/>
+                            <path d="M 42,84 C 34,86 32,96 42,98 C 43,92 47,88 42,84 Z"/>
+                            <path d="M 44,100 C 37,104 38,114 48,114 C 47,108 50,103 44,100 Z"/>
+                            <path d="M 50,116 C 45,122 49,131 58,127 C 55,121 57,117 50,116 Z"/>
                         </g>
 
-                        <!-- Central IPS Text -->
-                        <text x="100" y="118" font-family="'Inter', sans-serif" font-weight="900" font-size="52" fill="#0b1329" text-anchor="middle" letter-spacing="-1">IPS</text>
+                        <!-- Detailed Olive Wreath Leaves (Right Side) -->
+                        <g fill="#c59b27">
+                            <path d="M 148,55 C 156,53 162,62 154,68 C 150,62 145,60 148,55 Z"/>
+                            <path d="M 156,68 C 164,68 168,78 158,82 C 156,76 151,72 156,68 Z"/>
+                            <path d="M 158,84 C 166,86 168,96 158,98 C 157,92 153,88 158,84 Z"/>
+                            <path d="M 156,100 C 163,104 162,114 152,114 C 153,108 150,103 156,100 Z"/>
+                            <path d="M 150,116 C 155,122 151,131 142,127 C 145,121 143,117 150,116 Z"/>
+                        </g>
 
-                        <!-- Lower Arc Accent & Subtext -->
-                        <path d="M 40 125 Q 100 175 160 125" fill="none" stroke="#0b1329" stroke-width="2"/>
-                        <circle cx="100" cy="148" r="4" fill="#0b1329"/>
-                        <text x="100" y="160" font-family="'Inter', sans-serif" font-weight="700" font-size="8" fill="#0b1329" text-anchor="middle">Al Khobar</text>
-                        <text x="100" y="174" font-family="'Cairo', sans-serif" font-weight="800" font-size="9.5" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
+                        <!-- Inner Center IPS Monogram -->
+                        <text x="100" y="116" font-family="'Inter', sans-serif" font-weight="900" font-size="50" fill="#0b1329" text-anchor="middle" letter-spacing="-1.5">IPS</text>
+
+                        <!-- Bottom Curve Line & Dot -->
+                        <path d="M 45,118 Q 100,165 155,118" fill="none" stroke="#0b1329" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="100" cy="144" r="4.5" fill="#0b1329"/>
+
+                        <!-- Bottom Text -->
+                        <text x="100" y="156" font-family="'Inter', sans-serif" font-weight="700" font-size="8" fill="#0b1329" text-anchor="middle">Al Khobar</text>
+                        <text x="100" y="171" font-family="'Cairo', sans-serif" font-weight="800" font-size="9" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
                     </svg>
                 </div>
             </div>
@@ -78,7 +90,7 @@
         </div>
     </header>
 
-    <!-- Main Content Area (Light Background with White Cards) -->
+    <!-- Main Content Area -->
     <main class="max-w-7xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -105,8 +117,6 @@
 
             <!-- Student Roster (Right Column) -->
             <div class="lg:col-span-2 space-y-4">
-                
-                <!-- Roster Header Box -->
                 <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
                         <h2 class="font-extrabold text-slate-900 text-base">
@@ -121,11 +131,7 @@
                     </div>
                 </div>
 
-                <!-- Cards Grid -->
-                <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Dynamic Student Cards -->
-                </div>
-
+                <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
         </div>
@@ -175,10 +181,7 @@
         function renderStudents() {
             const grid = document.getElementById('studentGrid');
             const term = (document.getElementById('searchInput').value || '').toLowerCase().trim();
-            
-            const filtered = students.filter(s => 
-                s.name.toLowerCase().includes(term) || String(s.id).includes(term)
-            );
+            const filtered = students.filter(s => s.name.toLowerCase().includes(term) || String(s.id).includes(term));
 
             document.getElementById('studentCount').innerText = filtered.length;
             grid.innerHTML = '';
@@ -245,13 +248,7 @@
                 borderClass = "border-rose-500 text-rose-900";
             }
 
-            logs.unshift({
-                studentName: student.name,
-                action: actionText,
-                time: timestamp,
-                borderClass: borderClass
-            });
-
+            logs.unshift({ studentName: student.name, action: actionText, time: timestamp, borderClass: borderClass });
             saveState();
             renderStudents();
             renderLogs();
@@ -260,11 +257,7 @@
         function renderLogs() {
             const container = document.getElementById('logContainer');
             if (logs.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-slate-400 py-16">
-                        <p class="font-bold">لا توجد سجلات بعد</p>
-                        <span class="text-[10px]">No logs recorded yet</span>
-                    </div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-16"><p class="font-bold">لا توجد سجلات بعد</p><span class="text-[10px]">No logs recorded yet</span></div>`;
                 return;
             }
 
@@ -306,7 +299,7 @@
                     renderLogs();
                     alert("تم استيراد قائمة الطلاب بنجاح!");
                 } catch (err) {
-                    alert("حدث خطأ أثناء قراءة الملف. يرجى التأكد من اختيار ملف Excel صحيح.");
+                    alert("حدث خطأ أثناء قراءة الملف.");
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -325,12 +318,11 @@
             const worksheet = XLSX.utils.json_to_sheet(exportData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Class Evaluation");
-            
             XLSX.writeFile(workbook, `Class_Discipline_Report_${new Date().toISOString().slice(0, 10)}.xlsx`);
         }
 
         function resetData() {
-            if (confirm("هل أنت تأكد من إعادة ضبط البيانات إلى القائمة الافتراضية؟")) {
+            if (confirm("هل أنت تأكد من إعادة ضبط البيانات؟")) {
                 students = JSON.parse(JSON.stringify(initialStudents));
                 logs = [];
                 saveState();
@@ -339,7 +331,6 @@
             }
         }
 
-        // Initial Load
         renderStudents();
         renderLogs();
     </script>
