@@ -4,18 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام الانضباط المدرسي | Behavior System</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- SheetJS for Excel handling -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- Mammoth for Word handling -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
@@ -38,7 +33,7 @@
                 </div>
             </div>
 
-            <!-- Subject Selector Tabs -->
+            <!-- Subject Tabs -->
             <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
                 <button id="subject-islamic-btn" onclick="switchSubject('islamic')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-sky-600 text-white shadow">
                     <i data-lucide="book-open" class="w-4 h-4"></i> التربية الإسلامية (Islamic)
@@ -48,20 +43,20 @@
                 </button>
             </div>
 
+            <!-- Action Buttons -->
             <div class="flex items-center gap-2">
-                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition shadow">
+                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow">
                     <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> تصدير Excel
                 </button>
-                <button onclick="resetAllScores()" class="bg-amber-500/10 hover:bg-amber-600 text-amber-400 hover:text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition border border-amber-500/30">
+                <button onclick="resetAllScores()" class="bg-amber-500/10 hover:bg-amber-600 text-amber-400 hover:text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 border border-amber-500/30">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i> تصفير النقاط
                 </button>
-                <!-- زر مسح كافة الطلاب -->
-                <button onclick="deleteAllStudents()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition shadow">
+                <button onclick="deleteAllStudents()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow">
                     <i data-lucide="trash-2" class="w-4 h-4"></i> مسح كافة الطلاب
                 </button>
-                <!-- زر التراجع (يظهر مباشرة عند حدوث أي حذف) -->
-                <button id="undo-header-btn" onclick="restoreBackup()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-900 px-3.5 py-2 rounded-lg text-xs font-black flex items-center gap-1.5 transition shadow animate-pulse">
-                    <i data-lucide="undo-2" class="w-4 h-4"></i> تراجع عن الحذف
+                <!-- Undo Header Button -->
+                <button id="undo-header-btn" onclick="executeUndo()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-900 px-3.5 py-2 rounded-lg text-xs font-black flex items-center gap-1.5 shadow animate-bounce">
+                    <i data-lucide="undo-2" class="w-4 h-4"></i> ↩️ تراجع عن الإجراء
                 </button>
             </div>
         </div>
@@ -69,14 +64,14 @@
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- Controls & Filter & Import Link -->
+        <!-- Controls -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
             <div class="flex flex-col md:flex-row gap-4 justify-between items-center border-b pb-4">
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <label class="font-bold text-slate-700 text-sm whitespace-nowrap flex items-center gap-2">
+                    <label class="font-bold text-slate-700 text-sm flex items-center gap-2">
                         <i data-lucide="school" class="w-5 h-5 text-sky-600"></i> تصفية حسب الصف:
                     </label>
-                    <select id="class-filter" onchange="renderStudents()" class="px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 w-full md:w-60">
+                    <select id="class-filter" onchange="renderStudents()" class="px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-slate-800 w-full md:w-60">
                         <option value="ALL">جميع الصفوف | All Grades</option>
                         <option value="Grade 9 (الصف التاسع)">Grade 9 (الصف التاسع)</option>
                         <option value="Grade 10 (الصف العاشر)">Grade 10 (الصف العاشر)</option>
@@ -85,36 +80,34 @@
                     </select>
                 </div>
 
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <div class="relative w-full md:w-72">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-3"></i>
-                        <input id="search-input" oninput="renderStudents()" type="text" placeholder="بحث بالاسم أو ID..." class="pr-9 pl-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 w-full">
-                    </div>
+                <div class="relative w-full md:w-72">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-3"></i>
+                    <input id="search-input" oninput="renderStudents()" type="text" placeholder="بحث بالاسم..." class="pr-9 pl-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm w-full">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                    <input id="new-student-name" type="text" placeholder="اسم الطالب" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:outline-none w-full">
-                    <select id="new-student-class" class="px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-medium focus:outline-none w-32">
+                    <input id="new-student-name" type="text" placeholder="اسم الطالب" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs w-full">
+                    <select id="new-student-class" class="px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-medium w-32">
                         <option value="Grade 9 (الصف التاسع)">Grade 9</option>
                         <option value="Grade 10 (الصف العاشر)">Grade 10</option>
                         <option value="Grade 11 (الصف الحادي عشر)">Grade 11</option>
                         <option value="Grade 12 (الصف الثاني عشر)">Grade 12</option>
                     </select>
-                    <button onclick="addSingleStudent()" class="bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap transition">إضافة</button>
+                    <button onclick="addSingleStudent()" class="bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap">إضافة</button>
                 </div>
 
                 <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                     <input type="file" id="file-import" accept=".xlsx, .xls, .csv, .docx, .doc, .txt" class="hidden" onchange="handleFileUpload(event)">
-                    <button onclick="document.getElementById('file-import').click()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition">
+                    <button onclick="document.getElementById('file-import').click()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5">
                         <i data-lucide="upload" class="w-4 h-4"></i> رفع ملف (Excel / Word)
                     </button>
                 </div>
 
                 <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                    <button onclick="importFromURLLink()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition">
-                        <i data-lucide="link" class="w-4 h-4"></i> جلب من رابط Excel / Google Sheets
+                    <button onclick="importFromURLLink()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i data-lucide="link" class="w-4 h-4"></i> جلب من رابط Excel
                     </button>
                 </div>
             </div>
@@ -124,7 +117,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
-                    <p id="subject-stat-label" class="text-xs font-bold text-slate-400">طلاب المادة الحالية</p>
+                    <p class="text-xs font-bold text-slate-400">طلاب المادة الحالية</p>
                     <p id="stat-students" class="text-2xl font-black text-slate-700">0</p>
                 </div>
                 <div class="p-3 bg-slate-100 rounded-xl text-slate-600"><i data-lucide="users" class="w-6 h-6"></i></div>
@@ -154,55 +147,47 @@
 
         <!-- Main Content Area -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 space-y-4">
+            <div class="lg:col-span-2">
                 <div id="students-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Real-time Activity Log -->
+            <!-- Activity Log -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 h-fit space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
                     <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                         <i data-lucide="history" class="w-5 h-5 text-slate-600"></i> سجل التوثيق (<span id="current-subject-log-name">Islamic</span>)
                     </h2>
-                    <span id="log-count" class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-bold">0 Records</span>
+                    <span id="log-count" class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-bold">0</span>
                 </div>
-
-                <div id="activity-log" class="space-y-3 max-h-[550px] overflow-y-auto pr-1">
-                    <p class="text-slate-400 text-center text-sm py-8">لا توجد حركات مسجلة لهذه المادة.</p>
-                </div>
+                <div id="activity-log" class="space-y-3 max-h-[550px] overflow-y-auto pr-1"></div>
             </div>
         </div>
     </main>
 
-    <!-- Toast Notification للتراجع السريع -->
-    <div id="toast-undo" class="fixed bottom-5 left-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-4 hidden border border-slate-700">
-        <span id="toast-message" class="text-xs font-bold text-slate-200">تم مسح المحتوى.</span>
-        <button onclick="restoreBackup()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-1 rounded-lg text-xs font-black transition flex items-center gap-1">
-            <i data-lucide="undo-2" class="w-3.5 h-3.5"></i> تراجع الآن
+    <!-- Toast Notification Undo -->
+    <div id="toast-undo" class="fixed bottom-5 left-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-4 hidden border border-slate-700">
+        <span id="toast-message" class="text-xs font-bold text-slate-200">تم تنفذ الإجراء.</span>
+        <button onclick="executeUndo()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 shadow">
+            <i data-lucide="undo-2" class="w-4 h-4"></i> تراجع الآن
         </button>
     </div>
 
-    <!-- Modal for Behavior Selection -->
+    <!-- Reason Modal -->
     <div id="reason-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="reason-modal-title" class="text-base font-bold text-slate-800">تحديد السبب</h3>
+                <h3 class="text-base font-bold text-slate-800">تحديد السبب</h3>
                 <button onclick="closeReasonModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
-            
             <p id="reason-modal-student-info" class="text-xs font-bold text-sky-700 bg-sky-50 p-2 rounded-lg"></p>
-
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-600">اختر السبب / نوع الملاحظة الصفية:</label>
-                <select id="reason-select" onchange="toggleCustomReasonInput()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 focus:outline-none">
-                </select>
+                <select id="reason-select" onchange="toggleCustomReasonInput()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 focus:outline-none"></select>
             </div>
-
             <div id="custom-reason-container" class="hidden space-y-1">
                 <label class="block text-xs font-bold text-slate-600">اكتب الملاحظة الخاصة:</label>
                 <input id="custom-reason-input" type="text" placeholder="مثال: نسى دفتر التمارين..." class="w-full p-2 border border-slate-300 rounded-lg text-xs focus:outline-none">
             </div>
-
             <div class="flex justify-end gap-2 pt-3 border-t">
                 <button onclick="closeReasonModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs">إلغاء</button>
                 <button onclick="confirmCardAssignment()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-2 rounded-lg text-xs">حفظ وتأكيد</button>
@@ -210,110 +195,88 @@
         </div>
     </div>
 
-    <!-- Modal for Email -->
+    <!-- Email Modal -->
     <div id="email-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-200">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-title" class="text-lg font-bold text-slate-800 flex items-center gap-2"></h3>
+                <h3 id="modal-title" class="text-lg font-bold text-slate-800"></h3>
                 <div class="flex items-center gap-2">
-                    <button id="lang-toggle-btn" onclick="toggleEmailLanguage()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-lg text-xs font-bold border border-slate-300 flex items-center gap-1 transition">
-                        <i data-lucide="languages" class="w-4 h-4"></i> <span id="lang-btn-text">English</span>
+                    <button id="lang-toggle-btn" onclick="toggleEmailLanguage()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-lg text-xs font-bold border border-slate-300">
+                        <span id="lang-btn-text">English</span>
                     </button>
                     <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
                 </div>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 mb-1">موضوع الرسالة / Subject:</label>
-                <input id="email-subject" type="text" readonly class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-bold text-slate-800 focus:outline-none">
+                <label class="block text-xs font-bold text-slate-500 mb-1">الموضوع / Subject:</label>
+                <input id="email-subject" type="text" readonly class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-bold text-slate-800">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 mb-1">نص الرسالة الصادر من معلم المادة / Teacher Message Body:</label>
-                <textarea id="email-body" rows="11" readonly class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm text-slate-700 font-medium leading-relaxed focus:outline-none"></textarea>
+                <label class="block text-xs font-bold text-slate-500 mb-1">المحتوى / Message Body:</label>
+                <textarea id="email-body" rows="10" readonly class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm text-slate-700 font-medium leading-relaxed"></textarea>
             </div>
             <div class="flex justify-end gap-2 pt-2 border-t">
                 <button onclick="closeModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-lg text-sm">إغلاق</button>
-                <button onclick="copyEmailText()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-2 rounded-lg text-sm flex items-center gap-2">
-                    <i data-lucide="copy" class="w-4 h-4"></i> نسخ النص
-                </button>
+                <button onclick="copyEmailText()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-2 rounded-lg text-sm">نسخ النص</button>
             </div>
         </div>
     </div>
 
-    <!-- Print Area -->
     <div id="print-area" class="hidden p-8"></div>
 
     <script>
         let currentSubject = 'islamic'; 
         let pendingCardAction = { studentId: null, cardType: null };
-        let stateHistory = []; // سجل للتراجع Multi-level Backup
+        let historyStack = []; // حزمة التراجع (تتحمل كل عمليات الإلغاء والحذف)
 
         const reasonsList = {
-            green: [
-                "المشاركة والمناقشة الفعالة بالحصة",
-                "إنجاز الواجب والمهام بدرجة ممتازة",
-                "الالتزام والانضباط والهدوء التام",
-                "مساعدة الزملاء وإغناء البيئة الصفية",
-                "سبب آخر..."
-            ],
-            yellow: [
-                "عدم حل/تسليم الواجب المدرسي",
-                "الكلام والحديث الجانبي بدون إذن",
-                "التأخر عن حضور الحصة الصفية",
-                "التشتت والتغافل أثناء الشرح",
-                "سبب آخر..."
-            ],
-            red: [
-                "الخروج من الصف بدون إذن المعلم",
-                "التعطيل وإثارة الشغب المتكرر داخل الفصل",
-                "عدم إحضار الكتاب أو الأدوات المدرسية",
-                "عدم احترام تعليمات المعلم وقواعد الصف",
-                "سبب آخر..."
-            ]
+            green: ["المشاركة والمناقشة الفعالة بالحصة", "إنجاز الواجب والمهام بدرجة ممتازة", "الالتزام والانضباط والهدوء التام", "مساعدة الزملاء وإغناء البيئة الصفية", "سبب آخر..."],
+            yellow: ["عدم حل/تسليم الواجب المدرسي", "الكلام والحديث الجانبي بدون إذن", "التأخر عن حضور الحصة الصفية", "التشتت والتغافل أثناء الشرح", "سبب آخر..."],
+            red: ["الخروج من الصف بدون إذن المعلم", "التعطيل وإثارة الشغب المتكرر داخل الفصل", "عدم إحضار الكتاب أو الأدوات المدرسية", "عدم احترام تعليمات المعلم وقواعد الصف", "سبب آخر..."]
         };
 
-        const defaultData = {
+        let appData = JSON.parse(localStorage.getItem('school_data_v15')) || {
             islamic: { students: [], logs: [] },
             ksa: { students: [], logs: [] }
         };
-
-        let appData = JSON.parse(localStorage.getItem('school_data_v12')) || defaultData;
 
         let currentEmailStudent = null;
         let currentEmailColor = null;
         let currentEmailLang = 'ar';
 
-        function saveSnapshot() {
-            stateHistory.push(JSON.stringify(appData));
-            if (stateHistory.length > 10) stateHistory.shift(); // الاحتفاظ بـ 10 خطوات للتراجع
-            showUndoButtons(true);
+        // الالتزام بحفظ نسخة لقطة عميقة مئة بالمئة قبل الحذف أو التعديل
+        function recordHistory() {
+            historyStack.push(JSON.stringify(appData));
+            if(historyStack.length > 20) historyStack.shift();
+            toggleUndoUI(true);
         }
 
-        function restoreBackup() {
-            if (stateHistory.length === 0) return;
-            const previousState = stateHistory.pop();
-            appData = JSON.parse(previousState);
-            localStorage.setItem('school_data_v12', JSON.stringify(appData));
+        function executeUndo() {
+            if (historyStack.length === 0) return;
+            const previousData = historyStack.pop();
+            appData = JSON.parse(previousData);
+            localStorage.setItem('school_data_v15', JSON.stringify(appData));
             
             renderStudents();
             renderLogs();
             updateStats();
 
-            if (stateHistory.length === 0) {
-                showUndoButtons(false);
+            if (historyStack.length === 0) {
+                toggleUndoUI(false);
             }
         }
 
-        function showUndoButtons(show, msg = "تم إجراء التغيير.") {
-            const undoHeader = document.getElementById('undo-header-btn');
+        function toggleUndoUI(show, text = "تم تغيير البيانات.") {
+            const undoBtn = document.getElementById('undo-header-btn');
             const toast = document.getElementById('toast-undo');
             const toastMsg = document.getElementById('toast-message');
 
             if (show) {
-                undoHeader.classList.remove('hidden');
-                toastMsg.innerText = msg;
+                undoBtn.classList.remove('hidden');
+                toastMsg.innerText = text;
                 toast.classList.remove('hidden');
             } else {
-                undoHeader.classList.add('hidden');
+                undoBtn.classList.add('hidden');
                 toast.classList.add('hidden');
             }
         }
@@ -338,11 +301,10 @@
             renderStudents();
             renderLogs();
             updateStats();
-            lucide.createIcons();
         }
 
         function saveData() {
-            localStorage.setItem('school_data_v12', JSON.stringify(appData));
+            localStorage.setItem('school_data_v15', JSON.stringify(appData));
             updateStats();
             renderLogs();
         }
@@ -353,10 +315,10 @@
             const name = nameInput.value.trim();
             if(!name) { alert('يرجى إدخال اسم الطالب'); return; }
 
-            saveSnapshot();
+            recordHistory();
 
             appData[currentSubject].students.push({
-                id: Date.now().toString(),
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
                 name: name,
                 grade: classSelect.value,
                 score: 20.0,
@@ -374,22 +336,22 @@
                 return;
             }
 
-            if(confirm(`⚠️ هل أنت تأكد من مسح جميع الطلاب كلياً لمادة (${currentSubject.toUpperCase()})؟`)) {
-                saveSnapshot();
+            if(confirm(`⚠️ هل أنت متاكد من مسح جميع الطلاب لمادة (${currentSubject.toUpperCase()})؟`)) {
+                recordHistory();
                 appData[currentSubject].students = [];
                 appData[currentSubject].logs = [];
                 saveData();
                 renderStudents();
-                showUndoButtons(true, "تم مسح كافة الطلاب.");
+                toggleUndoUI(true, "تم مسح كافة الطلاب بنجاح.");
             }
         }
 
         function removeStudent(id) {
-            saveSnapshot();
+            recordHistory();
             appData[currentSubject].students = appData[currentSubject].students.filter(s => s.id !== id);
             saveData(); 
             renderStudents();
-            showUndoButtons(true, "تم حذف الطالب.");
+            toggleUndoUI(true, "تم حذف الطالب.");
         }
 
         function processExcelFile(file) {
@@ -400,7 +362,7 @@
                 const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                 let count = 0;
 
-                saveSnapshot();
+                recordHistory();
 
                 json.forEach((row) => {
                     let nameVal = '';
@@ -430,7 +392,7 @@
 
                 saveData(); 
                 renderStudents(); 
-                alert(`تم استيراد ${count} طالب بنجاح وترشيح الأسطر الفارغة!`);
+                alert(`تم استيراد ${count} طالب بنجاح!`);
             };
             reader.readAsArrayBuffer(file);
         }
@@ -452,7 +414,7 @@
             reader.onload = function(e) {
                 mammoth.extractRawText({ arrayBuffer: e.target.result }).then(function(result) {
                     let count = 0;
-                    saveSnapshot();
+                    recordHistory();
                     result.value.split('\n').forEach(line => {
                         if (line.trim() && line.trim().length > 1) {
                             appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
@@ -469,7 +431,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 let count = 0;
-                saveSnapshot();
+                recordHistory();
                 e.target.result.split('\n').forEach(line => {
                     if (line.trim() && line.trim().length > 1) {
                         appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
@@ -482,7 +444,7 @@
         }
 
         function importFromURLLink() {
-            const url = prompt("أدخل رابط ملف Excel أو Google Sheets (رابط مباشر):");
+            const url = prompt("أدخل رابط ملف Excel:");
             if (!url) return;
 
             fetch(url)
@@ -492,7 +454,7 @@
                     const workbook = XLSX.read(data, { type: 'array' });
                     const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                     let count = 0;
-                    saveSnapshot();
+                    recordHistory();
                     json.forEach((row) => {
                         if (row[0] && row[0].toString().trim().length > 1 && !row[0].toString().includes('اسم')) {
                             appData[currentSubject].students.push({
@@ -506,7 +468,7 @@
                     });
                     saveData(); renderStudents(); alert(`تم استيراد ${count} طالب بنجاح!`);
                 })
-                .catch(() => alert("تعذر استيراد البيانات من الرابط."));
+                .catch(() => alert("تعذر جلب البيانات."));
         }
 
         function openReasonModal(studentId, cardType) {
@@ -548,7 +510,7 @@
             const student = appData[currentSubject].students.find(s => s.id === studentId);
             if (!student) return;
 
-            saveSnapshot();
+            recordHistory();
 
             let selectedReason = document.getElementById('reason-select').value;
             if (selectedReason === 'سبب آخر...') {
@@ -598,7 +560,6 @@
             currentEmailLang = 'ar';
             renderEmailContent();
             document.getElementById('email-modal').classList.remove('hidden');
-            lucide.createIcons();
         }
 
         function toggleEmailLanguage() {
@@ -610,60 +571,38 @@
             const student = currentEmailStudent;
             const color = currentEmailColor;
             const isAr = currentEmailLang === 'ar';
-            const subjectName = currentSubject === 'islamic' ? 'مادة التربية الإسلامية / Islamic Studies' : 'مادة الدراسات السعودية / KSA Studies';
+            const subjectName = currentSubject === 'islamic' ? 'مادة التربية الإسلامية' : 'مادة الدراسات السعودية';
 
             const modalTitle = document.getElementById('modal-title');
             const subjectInput = document.getElementById('email-subject');
             const bodyInput = document.getElementById('email-body');
             const langBtnText = document.getElementById('lang-btn-text');
 
-            langBtnText.innerText = isAr ? 'English' : 'عربي (Arabic)';
+            langBtnText.innerText = isAr ? 'English' : 'عربي';
             bodyInput.dir = isAr ? 'rtl' : 'ltr';
 
             if (color === 'green') {
-                modalTitle.innerHTML = `<span class="text-emerald-600">🟢 ${isAr ? `رسالة إشادة من معلم (${subjectName})` : `Praise Email (${subjectName})`}</span>`;
-                if (isAr) {
-                    subjectInput.value = `🌟 إشادة وتميز في ${subjectName}: ${student.name}`;
-                    bodyInput.value = `المكرم ولي أمر الطالب: ${student.name} المحترم،\nالصف: ${student.grade}\n\nالسلام عليكم ورحمة الله وبركاته،،،\n\nأود بصفتي معلم ${subjectName} أن أشارككم تميز ابنكم الملحوظ داخل الفصل والتزامه السلوكي.\n\nتم منحه (4 بطاقات خضراء 🟢)، وحصل على رصيد سلوكي (${student.score.toFixed(1)} من 20).\n\nأتوجه لكم بجزيل الشكر،،\nمعلم المادة`;
-                } else {
-                    subjectInput.value = `🌟 Subject Commendation (${subjectName}): ${student.name}`;
-                    bodyInput.value = `Dear Parent/Guardian of ${student.name},\nGrade: ${student.grade}\n\nGreetings,\n\nAs the teacher for ${subjectName}, I am delighted to share that your child has demonstrated outstanding behavior.\n\n4 Green Cards 🟢 awarded. Current Score: (${student.score.toFixed(1)} / 20).\n\nBest regards,\nSubject Teacher`;
-                }
-            } 
-            else if (color === 'yellow') {
-                modalTitle.innerHTML = `<span class="text-amber-600">🟡 ${isAr ? `رسالة تنبيه من معلم (${subjectName})` : `Behavior Notice (${subjectName})`}</span>`;
-                if (isAr) {
-                    subjectInput.value = `⚠️ تنبيه سلوكي في ${subjectName}: ${student.name}`;
-                    bodyInput.value = `المكرم ولي أمر الطالب: ${student.name} المحترم،\nالصف: ${student.grade}\n\nالسلام عليكم ورحمة الله وبركاته،،،\n\nحرصاً مني على مصلحة الطالب، أحاطتكم بتسجيل (4 بطاقات صفراء 🟡) لملاحظات كعدم حل الواجب أو الكلام أثناء الشرح. الرصيد: (${student.score.toFixed(1)} من 20).\n\nنأمل المتابعة والاهتمام.\n\nمعلم المادة`;
-                } else {
-                    subjectInput.value = `⚠️ Classroom Notice (${subjectName}): ${student.name}`;
-                    bodyInput.value = `Dear Parent/Guardian of ${student.name},\nGrade: ${student.grade}\n\nGreetings,\n\n4 Yellow Cards 🟡 recorded for classroom behaviors like homework neglect or talking without permission. Current Score: (${student.score.toFixed(1)} / 20).\n\nSubject Teacher`;
-                }
-            } 
-            else if (color === 'red') {
-                modalTitle.innerHTML = `<span class="text-rose-600">🔴 ${isAr ? `إشعار مخالفة من معلم (${subjectName})` : `Behavior Escalation (${subjectName})`}</span>`;
-                if (isAr) {
-                    subjectInput.value = `🚨 إشعار رسمي من معلم ${subjectName}: ${student.name}`;
-                    bodyInput.value = `المكرم ولي أمر الطالب: ${student.name} المحترم،\nالصف: ${student.grade}\n\nالسلام عليكم ورحمة الله وبركاته،،،\n\nيؤسفني إبلاغكم بتسجيل (4 بطاقات حمراء 🔴) لمخالفات كالمغادرة دون إذن أو التعطيل المستمر. الرصيد: (${student.score.toFixed(1)} من 20).\n\nجرى رفع الملاحظات لإدارة المدرسة.\n\nمعلم المادة`;
-                } else {
-                    subjectInput.value = `🚨 Behavioral Escalation (${subjectName}): ${student.name}`;
-                    bodyInput.value = `Dear Parent/Guardian of ${student.name},\nGrade: ${student.grade}\n\nGreetings,\n\n4 Red Cards 🔴 issued due to severe classroom infractions. Current Score: (${student.score.toFixed(1)} / 20).\n\nSubject Teacher`;
-                }
+                modalTitle.innerHTML = `<span class="text-emerald-600">🟢 إشادة وسلوك متميز</span>`;
+                subjectInput.value = isAr ? `🌟 تميز وتفوق: ${student.name}` : `🌟 Commendation Notice: ${student.name}`;
+                bodyInput.value = isAr ? `ولي أمر الطالب: ${student.name}\n\nنود إعلامكم بحصول ابنكم على 4 بطاقات خضراء في ${subjectName}.\nالرصيد: ${student.score.toFixed(1)} / 20` : `Dear Parent of ${student.name},\n\nYour child has received 4 Green Cards in ${subjectName}.\nCurrent Score: ${student.score.toFixed(1)} / 20`;
+            } else if (color === 'yellow') {
+                modalTitle.innerHTML = `<span class="text-amber-600">🟡 تنبيه سلوكي</span>`;
+                subjectInput.value = isAr ? `⚠️ تنبيه في ${subjectName}: ${student.name}` : `⚠️ Classroom Notice: ${student.name}`;
+                bodyInput.value = isAr ? `ولي أمر الطالب: ${student.name}\n\nتم تسجيل 4 بطاقات صفراء في ${subjectName}.\nالرصيد الحالي: ${student.score.toFixed(1)} / 20` : `Dear Parent of ${student.name},\n\n4 Yellow Cards registered in ${subjectName}.\nCurrent Score: ${student.score.toFixed(1)} / 20`;
+            } else if (color === 'red') {
+                modalTitle.innerHTML = `<span class="text-rose-600">🔴 إشعار مخالفات</span>`;
+                subjectInput.value = isAr ? `🚨 إشعار سلوكي رسمي: ${student.name}` : `🚨 Behavior Escalation: ${student.name}`;
+                bodyInput.value = isAr ? `ولي أمر الطالب: ${student.name}\n\nتم تسجيل 4 بطاقات حمراء بمادة ${subjectName}.\nالرصيد الحالي: ${student.score.toFixed(1)} / 20` : `Dear Parent of ${student.name},\n\n4 Red Cards issued in ${subjectName}.\nCurrent Score: ${student.score.toFixed(1)} / 20`;
             }
         }
 
-        function closeModal() {
-            document.getElementById('email-modal').classList.add('hidden');
-        }
-
+        function closeModal() { document.getElementById('email-modal').classList.add('hidden'); }
         function copyEmailText() {
-            const subject = document.getElementById('email-subject').value;
-            const body = document.getElementById('email-body').value;
-            navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`).then(() => alert('تم النسخ بنجاح!'));
+            navigator.clipboard.writeText(`Subject: ${document.getElementById('email-subject').value}\n\n${document.getElementById('email-body').value}`).then(() => alert('تم النسخ!'));
         }
 
         function updateStudentGrade(id, newGrade) {
-            saveSnapshot();
+            recordHistory();
             const student = appData[currentSubject].students.find(s => s.id === id);
             if(student) { student.grade = newGrade; saveData(); }
         }
@@ -673,7 +612,7 @@
             const query = document.getElementById('search-input').value.toLowerCase();
             return appData[currentSubject].students.filter(s => {
                 const matchesClass = (selectedClass === 'ALL' || s.grade === selectedClass);
-                const matchesSearch = s.name.toLowerCase().includes(query) || s.grade.toLowerCase().includes(query);
+                const matchesSearch = s.name.toLowerCase().includes(query);
                 return matchesClass && matchesSearch;
             });
         }
@@ -686,29 +625,23 @@
             const greenPointsLabel = currentSubject === 'islamic' ? '+1.0' : '+0.5';
 
             if(filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-xl text-center text-slate-400 border border-dashed border-slate-300 font-medium">لا يوجد طلاب لهذه المادة / الصف. قم برفع ملف Excel محدد بشكل صحيح.</div>`;
-                updateStats(); return;
+                container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-xl text-center text-slate-400 font-medium">لا يوجد طلاب أومعطيات مسجلة.</div>`;
+                updateStats(); 
+                return;
             }
 
             filtered.forEach(student => {
-                const isRedAlert = student.red >= 4;
-                const isYellowAlert = student.yellow >= 4;
-                const isGreenAlert = student.green >= 4;
-
                 const card = document.createElement('div');
-                card.className = `bg-white rounded-xl shadow-sm border p-4 space-y-3 relative flex flex-col justify-between ${isRedAlert ? 'border-rose-500 ring-2 ring-rose-200' : isYellowAlert ? 'border-amber-400' : isGreenAlert ? 'border-emerald-400' : 'border-slate-200'}`;
+                card.className = `bg-white rounded-xl shadow-sm border p-4 space-y-3 relative flex flex-col justify-between border-slate-200`;
                 
                 card.innerHTML = `
                     <div class="space-y-2">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h3 class="font-bold text-slate-900 text-base leading-snug flex items-center gap-1.5">
-                                    ${student.name}
-                                    ${isRedAlert ? '🔴' : ''} ${isYellowAlert ? '🟡' : ''} ${isGreenAlert ? '🌟' : ''}
-                                </h3>
+                                <h3 class="font-bold text-slate-900 text-base flex items-center gap-1.5">${student.name}</h3>
                                 <div class="flex items-center gap-1.5 mt-1">
-                                    <span class="text-xs text-slate-400 font-medium">الصف:</span>
-                                    <select onchange="updateStudentGrade('${student.id}', this.value)" class="text-xs font-bold bg-sky-50 text-sky-800 border border-sky-200 rounded px-1.5 py-0.5 focus:outline-none">
+                                    <span class="text-xs text-slate-400">الصف:</span>
+                                    <select onchange="updateStudentGrade('${student.id}', this.value)" class="text-xs font-bold bg-sky-50 text-sky-800 border rounded px-1.5 py-0.5">
                                         <option value="Grade 9 (الصف التاسع)" ${student.grade === 'Grade 9 (الصف التاسع)' ? 'selected' : ''}>Grade 9</option>
                                         <option value="Grade 10 (الصف العاشر)" ${student.grade === 'Grade 10 (الصف العاشر)' ? 'selected' : ''}>Grade 10</option>
                                         <option value="Grade 11 (الصف الحادي عشر)" ${student.grade === 'Grade 11 (الصف الحادي عشر)' ? 'selected' : ''}>Grade 11</option>
@@ -716,59 +649,45 @@
                                     </select>
                                 </div>
                             </div>
-                            <button onclick="removeStudent('${student.id}')" title="حذف الطالب" class="text-slate-300 hover:text-rose-500 transition p-1"><i data-lucide="x-circle" class="w-5 h-5"></i></button>
+                            <!-- زر حذف فردي مؤمن بالكامل -->
+                            <button onclick="removeStudent('${student.id}')" title="حذف" class="text-slate-300 hover:text-rose-500 transition p-1 font-black text-sm">✕</button>
                         </div>
 
-                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
                             <span class="text-xs text-slate-500 font-bold">الرصيد:</span>
                             <span class="text-sm font-black text-slate-800 bg-white px-2.5 py-0.5 rounded border border-slate-200">${student.score.toFixed(1)} / 20</span>
                         </div>
 
-                        <div class="flex justify-between gap-1 text-xs bg-slate-50/80 p-2 rounded-lg text-slate-600 font-medium text-center">
-                            <span>🟢 <strong>${student.green}</strong></span>
-                            <span>🟡 <strong>${student.yellow}</strong></span>
-                            <span>🔴 <strong>${student.red}</strong></span>
+                        <div class="flex justify-between gap-1 text-xs bg-slate-50 p-2 rounded-lg text-slate-600 text-center font-bold">
+                            <span>🟢 ${student.green}</span>
+                            <span>🟡 ${student.yellow}</span>
+                            <span>🔴 ${student.red}</span>
                         </div>
                     </div>
 
                     <div class="space-y-2 pt-2 border-t border-slate-100">
                         <div class="grid grid-cols-3 gap-2">
-                            <button onclick="openReasonModal('${student.id}', 'green')" class="bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs flex flex-col items-center justify-center transition shadow-sm">
-                                <span>🟢 أخضر</span>
-                                <span class="text-[10px] opacity-80">${greenPointsLabel}</span>
-                            </button>
-                            <button onclick="openReasonModal('${student.id}', 'yellow')" class="bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg font-bold text-xs flex flex-col items-center justify-center transition shadow-sm">
-                                <span>🟡 أصفر</span>
-                                <span class="text-[10px] opacity-80">-0.5</span>
-                            </button>
-                            <button onclick="openReasonModal('${student.id}', 'red')" class="bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-lg font-bold text-xs flex flex-col items-center justify-center transition shadow-sm">
-                                <span>🔴 أحمر</span>
-                                <span class="text-[10px] opacity-80">-1.0</span>
-                            </button>
-                        </div>
-                        
-                        <div class="flex gap-1.5">
-                            <button onclick="printStudentReport('${student.id}')" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white py-1.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition shadow-sm">
-                                <i data-lucide="printer" class="w-3.5 h-3.5"></i> التقرير
-                            </button>
-                            ${(isGreenAlert || isYellowAlert || isRedAlert) ? `<button onclick="showEmailModal(appData['${currentSubject}'].students.find(s=>s.id==='${student.id}'), '${isGreenAlert?'green':isYellowAlert?'yellow':'red'}')" class="bg-sky-600 hover:bg-sky-700 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> إيميل</button>` : ''}
+                            <button onclick="openReasonModal('${student.id}', 'green')" class="bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs">🟢 أخضر (${greenPointsLabel})</button>
+                            <button onclick="openReasonModal('${student.id}', 'yellow')" class="bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg font-bold text-xs">🟡 أصفر (-0.5)</button>
+                            <button onclick="openReasonModal('${student.id}', 'red')" class="bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-lg font-bold text-xs">🔴 أحمر (-1.0)</button>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
+            
             updateStats();
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e){}
         }
 
         function renderLogs() {
             const container = document.getElementById('activity-log');
             const currentLogs = appData[currentSubject].logs;
-            document.getElementById('log-count').innerText = `${currentLogs.length} Records`;
+            document.getElementById('log-count').innerText = `${currentLogs.length}`;
             container.innerHTML = '';
 
             if(currentLogs.length === 0) {
-                container.innerHTML = '<p class="text-slate-400 text-center text-sm py-8">لا توجد حركات مسجلة لهذه المادة.</p>';
+                container.innerHTML = '<p class="text-slate-400 text-center text-sm py-8">لا توجد سجلات بعد.</p>';
                 return;
             }
 
@@ -777,10 +696,10 @@
                 item.className = `p-3 rounded-lg border text-xs space-y-1 ${log.badgeClass}`;
                 item.innerHTML = `
                     <div class="flex justify-between font-bold">
-                        <span>${log.studentName} <span class="text-[10px] opacity-75">(${log.grade || ''})</span></span>
+                        <span>${log.studentName} (${log.grade || ''})</span>
                         <span>${log.cardName}</span>
                     </div>
-                    <div class="text-[11px] font-semibold text-slate-700">📌 السبب: ${log.reason || 'غير محدد'}</div>
+                    <div class="text-[11px] font-semibold text-slate-700">📌 ${log.reason || 'عام'}</div>
                     <div class="flex justify-between text-[10px] opacity-80 pt-0.5">
                         <span>🕒 ${log.timestamp}</span>
                         <span>الرصيد: ${log.newScore.toFixed(1)}</span>
@@ -798,78 +717,23 @@
             document.getElementById('stat-red').innerText = filtered.reduce((acc, s) => acc + s.red, 0);
         }
 
-        function printStudentReport(studentId) {
-            const student = appData[currentSubject].students.find(s => s.id === studentId);
-            if(!student) return;
-            const studentLogs = appData[currentSubject].logs.filter(l => l.studentId === student.id || l.studentName === student.name);
-
-            let logsHTML = '';
-            if(studentLogs.length === 0) {
-                logsHTML = `<tr><td colspan="4" style="text-align:center; padding: 12px; border: 1px solid #ccc;">لا توجد سجلات.</td></tr>`;
-            } else {
-                studentLogs.forEach(log => {
-                    logsHTML += `<tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${log.timestamp}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${log.cardName}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${log.reason || '-'}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${log.newScore.toFixed(1)} / 20</td>
-                    </tr>`;
-                });
-            }
-
-            const printContent = `
-                <div style="font-family: 'Tajawal', sans-serif; direction: rtl; padding: 20px;">
-                    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
-                        <h1 style="font-size: 22px; font-weight: bold; margin: 0;">تقرير السلوك والانضباط المدرسي - معلم مادة (${currentSubject.toUpperCase()})</h1>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; background: #f4f4f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                        <div>
-                            <p style="margin: 3px 0; font-size: 15px;"><strong>اسم الطالب:</strong> ${student.name}</p>
-                            <p style="margin: 3px 0; font-size: 15px;"><strong>الصف:</strong> ${student.grade}</p>
-                        </div>
-                        <div style="text-align: left;">
-                            <p style="margin: 3px 0; font-size: 15px;"><strong>الرصيد الحالي:</strong> ${student.score.toFixed(1)} / 20</p>
-                        </div>
-                    </div>
-                    <h3 style="font-size: 16px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">السجل التفصيلي للملاحظات والمخالفات:</h3>
-                    <table style="width: 100%; border-collapse: collapse; text-align: right; margin-top: 10px; font-size: 13px;">
-                        <thead>
-                            <tr style="background: #e4e4e7;">
-                                <th style="padding: 8px; border: 1px solid #ddd;">التاريخ والوقت</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">الإجراء</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">السبب / الملاحظة</th>
-                                <th style="padding: 8px; border: 1px solid #ddd;">الرصيد</th>
-                            </tr>
-                        </thead>
-                        <tbody>${logsHTML}</tbody>
-                    </table>
-                </div>
-            `;
-            const printArea = document.getElementById('print-area');
-            printArea.innerHTML = printContent;
-            printArea.classList.remove('hidden');
-            window.print();
-            printArea.classList.add('hidden');
-            printArea.innerHTML = '';
-        }
-
         function exportCSV() {
             const list = appData[currentSubject].students;
-            if(list.length === 0) { alert('لا توجد بيانات لهذه المادة!'); return; }
+            if(list.length === 0) { alert('لا توجد بيانات للرفع!'); return; }
             let csvContent = "\uFEFFاسم الطالب,الصف,الدرجة (/20),خضراء,صفراء,حمراء\n";
             list.forEach(s => { csvContent += `"${s.name}","${s.grade}",${s.score.toFixed(1)},${s.green},${s.yellow},${s.red}\n`; });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', `Teacher_Behavior_${currentSubject.toUpperCase()}_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Behavior_${currentSubject.toUpperCase()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
         function resetAllScores() {
-            if(confirm(`هل تريد تصفير النقاط والبطاقات لمادة (${currentSubject.toUpperCase()}) فقط؟`)) {
-                saveSnapshot();
+            if(confirm(`هل تريد تصفير كافة النقاط لمادة (${currentSubject.toUpperCase()})؟`)) {
+                recordHistory();
                 appData[currentSubject].students.forEach(s => { s.score = 20.0; s.green = 0; s.yellow = 0; s.red = 0; });
                 appData[currentSubject].logs = [];
                 saveData();
