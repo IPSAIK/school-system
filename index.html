@@ -9,44 +9,68 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #0b1329; color: #1e293b; }
+        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
     </style>
 </head>
-<body class="bg-[#0b1329] min-h-screen">
+<body class="bg-slate-50 min-h-screen pb-12">
 
-    <!-- Header Section (White Top Header like original image) -->
-    <header class="bg-white text-slate-800 shadow-md sticky top-0 z-50">
+    <!-- Header Section (Dark Navy Top Banner) -->
+    <header class="bg-[#0b1329] text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
             
-            <!-- Left Side: Upload Button -->
-            <div>
-                <label class="cursor-pointer bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 border border-blue-200 shadow-sm">
-                    <i class="fa-solid fa-file-import text-blue-700"></i>
-                    <span>رفع قائمة الطلاب (Excel) / Import Students</span>
+            <!-- Left Side: Import & Export Buttons -->
+            <div class="flex items-center gap-2">
+                <label class="cursor-pointer bg-blue-900/60 hover:bg-blue-800 text-white border border-blue-700/50 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-file-import text-blue-300"></i>
+                    <span>استيراد قائمة (Excel)</span>
                     <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
                 </label>
+                <button onclick="exportExcel()" class="bg-emerald-900/60 hover:bg-emerald-800 text-white border border-emerald-700/50 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-file-export text-emerald-300"></i>
+                    <span>تصدير البيانات</span>
+                </button>
+                <button onclick="resetData()" class="bg-rose-900/40 hover:bg-rose-800 text-rose-200 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 border border-rose-700/50 shadow-sm" title="إعادة ضبط">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
             </div>
 
-            <!-- Right Side: Title & IPS Logo -->
+            <!-- Right Side: Title & Official IPS Logo -->
             <div class="flex items-center gap-4">
                 <div class="text-right">
-                    <h1 class="text-2xl font-black text-slate-900 flex items-center gap-2 justify-end">
+                    <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 justify-end">
                         نظام انضباط وتقييم الفصل
                     </h1>
-                    <span class="block text-xs font-bold text-slate-500">Class Discipline & Evaluation System</span>
+                    <span class="block text-xs font-bold text-slate-300">Class Discipline & Evaluation System</span>
                     <p class="text-[11px] text-slate-400 mt-0.5">
-                        توثيق البطاقات والدرجات بالوقت والتاريخ | Real-time Cards & Grade Logging with Timestamp
+                        توثيق البطاقات والدرجات بالوقت والتاريخ | Real-time Cards & Grade Logging
                     </p>
                 </div>
 
-                <!-- IPS Logo Rendered Vector -->
-                <div class="bg-slate-50 p-1.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center w-16 h-16 shrink-0">
+                <!-- Exact Official IPS Logo Vector -->
+                <div class="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-16 h-16 shrink-0 border-2 border-amber-500/30">
                     <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#1F4E78" stroke-width="4"/>
-                        <path d="M30,105 Q100,10 170,105" fill="none" stroke="#C59B27" stroke-width="8" stroke-linecap="round"/>
-                        <path d="M30,105 Q100,200 170,105" fill="none" stroke="#C59B27" stroke-width="8" stroke-linecap="round"/>
-                        <text x="100" y="118" font-family="'Inter', sans-serif" font-weight="900" font-size="46" fill="#1F4E78" text-anchor="middle">IPS</text>
-                        <text x="100" y="165" font-family="'Cairo', sans-serif" font-weight="bold" font-size="11" fill="#1F4E78" text-anchor="middle">مدرسة البرامج العالمية</text>
+                        <!-- Upper Arc Text -->
+                        <path id="textArcTop" d="M 30 100 A 70 70 0 0 1 170 100" fill="none"/>
+                        <text font-size="10.5" font-family="'Inter', sans-serif" font-weight="800" fill="#0b1329" text-anchor="middle">
+                            <textPath href="#textArcTop" startOffset="50%">The International Programs School</textPath>
+                        </text>
+                        
+                        <!-- Wreath / Olive Leaves (Gold) -->
+                        <g fill="#c59b27">
+                            <path d="M 45 110 C 35 90 40 60 65 45 C 55 60 55 85 52 105 Z"/>
+                            <path d="M 155 110 C 165 90 160 60 135 45 C 145 60 145 85 148 105 Z"/>
+                            <circle cx="58" cy="62" r="3"/><circle cx="50" cy="78" r="3"/><circle cx="48" cy="94" r="3"/>
+                            <circle cx="142" cy="62" r="3"/><circle cx="150" cy="78" r="3"/><circle cx="152" cy="94" r="3"/>
+                        </g>
+
+                        <!-- Central IPS Text -->
+                        <text x="100" y="118" font-family="'Inter', sans-serif" font-weight="900" font-size="52" fill="#0b1329" text-anchor="middle" letter-spacing="-1">IPS</text>
+
+                        <!-- Lower Arc Accent & Subtext -->
+                        <path d="M 40 125 Q 100 175 160 125" fill="none" stroke="#0b1329" stroke-width="2"/>
+                        <circle cx="100" cy="148" r="4" fill="#0b1329"/>
+                        <text x="100" y="160" font-family="'Inter', sans-serif" font-weight="700" font-size="8" fill="#0b1329" text-anchor="middle">Al Khobar</text>
+                        <text x="100" y="174" font-family="'Cairo', sans-serif" font-weight="800" font-size="9.5" fill="#0b1329" text-anchor="middle">مدرسة البرامج العالمية</text>
                     </svg>
                 </div>
             </div>
@@ -54,23 +78,23 @@
         </div>
     </header>
 
-    <!-- Main Content Area (Dark Navy Background with Light/White Cards) -->
+    <!-- Main Content Area (Light Background with White Cards) -->
     <main class="max-w-7xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- Real-time Activity Log (Left Column) -->
             <div class="space-y-4">
-                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-md">
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-2">
                         <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-rotate-left text-blue-900"></i>
-                            توثيق الأنشطة بالوقت والتاريخ
+                            <i class="fa-solid fa-clock-rotate-left text-blue-900"></i>
+                            سجل الأنشطة والمخالفات
                         </h2>
                         <span class="text-[10px] text-slate-400 font-mono">Real-time Log</span>
                     </div>
-                    <p class="text-[10px] text-slate-400 mb-6">Activity & Grade Timestamps</p>
+                    <p class="text-[10px] text-slate-400 mb-4">Activity & Grade Timestamps</p>
 
-                    <div id="logContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1 text-xs">
+                    <div id="logContainer" class="space-y-2 max-h-[550px] overflow-y-auto pr-1 text-xs">
                         <div class="text-center text-slate-400 py-16">
                             <p class="font-bold">لا توجد سجلات بعد</p>
                             <span class="text-[10px]">No logs recorded yet</span>
@@ -83,23 +107,23 @@
             <div class="lg:col-span-2 space-y-4">
                 
                 <!-- Roster Header Box -->
-                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
                         <h2 class="font-extrabold text-slate-900 text-base">
                             قائمة الطلاب | Student Roster
                         </h2>
-                        <p class="text-xs text-slate-500 font-semibold">
-                            إجمالي الطلاب: <span id="studentCount" class="text-blue-900 font-bold">23</span> | Total Students
+                        <p class="text-xs text-slate-500 font-semibold mt-0.5">
+                            إجمالي الطلاب: <span id="studentCount" class="text-blue-900 font-bold">0</span> | Total Students
                         </p>
                     </div>
                     <div class="w-full sm:w-auto">
-                        <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث باسم الطالب أو ID / Search..." class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900">
+                        <input type="text" id="searchInput" oninput="renderStudents()" placeholder="بحث باسم الطالب أو ID..." class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900">
                     </div>
                 </div>
 
                 <!-- Cards Grid -->
                 <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Cards are generated via JavaScript -->
+                    <!-- Dynamic Student Cards -->
                 </div>
 
             </div>
@@ -108,13 +132,13 @@
     </main>
 
     <script>
-        let students = [
+        const initialStudents = [
             { id: "11216", name: "Arsalan Latif", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "11501", name: "Humza Usman", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "12637", name: "Abdul Moiz", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "12803", name: "Abdullah Zeeshan", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "13743", name: "Arka Albriza", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13837", name: "Ayyub Abdulmetin Taghiyev", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13837", name: "Ayyub Taghiyev", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "13468", name: "Yousef Al Ansari", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "11289", name: "Yousuf Bahlool", score: 20, green: 0, yellow: 0, red: 0 },
             { id: "11961", name: "Zaid Khandakji", score: 20, green: 0, yellow: 0, red: 0 },
@@ -134,16 +158,39 @@
             { id: "14147", name: "Zaid Alanani", score: 20, green: 0, yellow: 0, red: 0 }
         ];
 
-        let logs = [];
+        let students = JSON.parse(localStorage.getItem('ips_students')) || initialStudents;
+        let logs = JSON.parse(localStorage.getItem('ips_logs')) || [];
 
-        function renderStudents(data = students) {
+        function saveState() {
+            localStorage.setItem('ips_students', JSON.stringify(students));
+            localStorage.setItem('ips_logs', JSON.stringify(logs));
+        }
+
+        function getScoreBadgeColor(score) {
+            if (score >= 20) return "text-emerald-600";
+            if (score >= 15) return "text-amber-600";
+            return "text-rose-600";
+        }
+
+        function renderStudents() {
             const grid = document.getElementById('studentGrid');
-            document.getElementById('studentCount').innerText = data.length;
+            const term = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            
+            const filtered = students.filter(s => 
+                s.name.toLowerCase().includes(term) || String(s.id).includes(term)
+            );
+
+            document.getElementById('studentCount').innerText = filtered.length;
             grid.innerHTML = '';
 
-            data.forEach(student => {
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 py-10 bg-white rounded-2xl border border-slate-200">لا يوجد طلاب مطابقون للبحث</div>`;
+                return;
+            }
+
+            filtered.forEach(student => {
                 grid.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-md space-y-3">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2">
                             <div>
                                 <span class="text-[10px] font-mono text-slate-400">ID: ${student.id}</span>
@@ -151,19 +198,18 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-[10px] text-slate-400 block">الدرجة | Score</span>
-                                <span class="text-base font-bold text-emerald-600 font-mono">${student.score}</span>
+                                <span class="text-base font-bold font-mono ${getScoreBadgeColor(student.score)}">${student.score}</span>
                             </div>
                         </div>
 
-                        <!-- Card Action Buttons -->
                         <div class="grid grid-cols-3 gap-1.5 text-center text-[11px] font-bold">
-                            <button onclick="addCard('${student.id}', 'green')" class="py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-lg transition">
+                            <button onclick="addCard('${student.id}', 'green')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition active:scale-95">
                                 الممتازة (${student.green}) 🟢
                             </button>
-                            <button onclick="addCard('${student.id}', 'yellow')" class="py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition">
+                            <button onclick="addCard('${student.id}', 'yellow')" class="py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg transition active:scale-95">
                                 تنبيه (${student.yellow}) 🟡
                             </button>
-                            <button onclick="addCard('${student.id}', 'red')" class="py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg transition">
+                            <button onclick="addCard('${student.id}', 'red')" class="py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-lg transition active:scale-95">
                                 مخالفة (${student.red}) 🔴
                             </button>
                         </div>
@@ -173,56 +219,64 @@
         }
 
         function addCard(studentId, type) {
-            const student = students.find(s => s.id === studentId);
+            const student = students.find(s => String(s.id) === String(studentId));
             if (!student) return;
 
             const now = new Date();
-            const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
             let actionText = "";
+            let borderClass = "";
+
             if (type === 'green') {
                 student.green++;
                 student.score += 1;
-                actionText = "بطاقة إيجابية (+1) | Green Card (+1)";
+                actionText = "بطاقة إيجابية (+1) | Green Card";
+                borderClass = "border-emerald-500 text-emerald-900";
             } else if (type === 'yellow') {
                 student.yellow++;
                 student.score -= 1;
-                actionText = "بطاقة تنبيه (-1) | Yellow Card (-1)";
+                actionText = "بطاقة تنبيه (-1) | Yellow Card";
+                borderClass = "border-amber-500 text-amber-900";
             } else if (type === 'red') {
                 student.red++;
                 student.score -= 2;
-                actionText = "بطاقة مخالفة (-2) | Red Card (-2)";
+                actionText = "بطاقة مخالفة (-2) | Red Card";
+                borderClass = "border-rose-500 text-rose-900";
             }
 
             logs.unshift({
                 studentName: student.name,
                 action: actionText,
-                time: timestamp
+                time: timestamp,
+                borderClass: borderClass
             });
 
+            saveState();
             renderStudents();
             renderLogs();
         }
 
         function renderLogs() {
             const container = document.getElementById('logContainer');
-            if (logs.length === 0) return;
+            if (logs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-16">
+                        <p class="font-bold">لا توجد سجلات بعد</p>
+                        <span class="text-[10px]">No logs recorded yet</span>
+                    </div>`;
+                return;
+            }
 
             container.innerHTML = logs.map(log => `
-                <div class="p-2.5 bg-slate-50 rounded-xl border-r-4 border-blue-900 flex justify-between items-center text-xs border border-slate-200">
+                <div class="p-2.5 bg-slate-50 rounded-xl border-r-4 ${log.borderClass || 'border-blue-900'} flex justify-between items-center text-xs border border-slate-200 shadow-sm">
                     <div>
                         <span class="font-bold text-slate-800">${log.studentName}</span>
-                        <p class="text-blue-900 font-semibold text-[11px]">${log.action}</p>
+                        <p class="font-semibold text-[11px]">${log.action}</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-mono">${log.time}</span>
                 </div>
             `).join('');
-        }
-
-        function filterStudents() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = students.filter(s => s.name.toLowerCase().includes(term) || s.id.includes(term));
-            renderStudents(filtered);
         }
 
         function importExcel(event) {
@@ -231,25 +285,63 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(sheet);
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(sheet);
 
-                students = json.map(r => ({
-                    id: String(r.ID || r.id || r["المعرف"] || Math.floor(Math.random() * 89999 + 10000)),
-                    name: r.Name || r.name || r["اسم الطالب"] || "Unknown Student",
-                    score: 20,
-                    green: 0,
-                    yellow: 0,
-                    red: 0
-                }));
-                renderStudents();
+                    students = json.map(r => ({
+                        id: String(r.ID || r.id || r["المعرف"] || Math.floor(Math.random() * 89999 + 10000)),
+                        name: r.Name || r.name || r["اسم الطالب"] || "Unknown Student",
+                        score: Number(r.Score || r.score || r["الدرجة"] || 20),
+                        green: Number(r.Green || r.green || 0),
+                        yellow: Number(r.Yellow || r.yellow || 0),
+                        red: Number(r.Red || r.red || 0)
+                    }));
+
+                    logs = [];
+                    saveState();
+                    renderStudents();
+                    renderLogs();
+                    alert("تم استيراد قائمة الطلاب بنجاح!");
+                } catch (err) {
+                    alert("حدث خطأ أثناء قراءة الملف. يرجى التأكد من اختيار ملف Excel صحيح.");
+                }
             };
             reader.readAsArrayBuffer(file);
         }
 
+        function exportExcel() {
+            const exportData = students.map(s => ({
+                "ID / المعرف": s.id,
+                "Student Name / اسم الطالب": s.name,
+                "Score / الدرجة": s.score,
+                "Green Cards / بطاقات ممتازة": s.green,
+                "Yellow Cards / بطاقات تنبيه": s.yellow,
+                "Red Cards / بطاقات مخالفة": s.red
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Class Evaluation");
+            
+            XLSX.writeFile(workbook, `Class_Discipline_Report_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        }
+
+        function resetData() {
+            if (confirm("هل أنت تأكد من إعادة ضبط البيانات إلى القائمة الافتراضية؟")) {
+                students = JSON.parse(JSON.stringify(initialStudents));
+                logs = [];
+                saveState();
+                renderStudents();
+                renderLogs();
+            }
+        }
+
+        // Initial Load
         renderStudents();
+        renderLogs();
     </script>
 </body>
 </html>
