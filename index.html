@@ -9,39 +9,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #ffffff; color: #0f172a; }
     </style>
 </head>
 
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="bg-white text-slate-900 min-h-screen">
 
-    <!-- Header Section -->
-    <header class="bg-slate-800 border-b border-slate-700 shadow-md sticky top-0 z-50">
+    <!-- Header Section (Dark Navy Top Banner) -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             
-            <div class="flex items-center gap-3">
-                <div class="bg-white p-1 rounded-lg border border-slate-600 flex items-center justify-center shadow">
-                    <svg width="42" height="42" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 10 C50 10 10 50 10 100 C10 150 50 190 100 190 C150 190 190 150 190 100 C190 50 150 10 100 10 Z" fill="#FFFFFF"/>
-                        <path d="M100 25 C135 25 165 45 175 75 C160 60 130 50 100 50 C70 50 40 60 25 75 C35 45 65 25 100 25 Z" fill="#03254C"/>
-                        <text x="100" y="115" font-family="Arial, sans-serif" font-weight="900" font-size="48" fill="#113F67" text-anchor="middle">IPS</text>
-                        <path d="M40 130 C60 155 140 155 160 130" stroke="#B8860B" stroke-width="6" fill="none"/>
-                        <text x="100" y="175" font-family="Cairo, sans-serif" font-weight="bold" font-size="12" fill="#113F67" text-anchor="middle">مدرسة البرامج العالمية</text>
-                    </svg>
-                </div>
-
-                <div>
-                    <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
-                        نظام الانضباط الموحد <span class="text-slate-400 font-normal">| Unified Behavior System</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">الصفوف 9 - 12 | Grades 9 - 12 (Islamic & KSA Studies)</p>
-                </div>
+            <div>
+                <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                    نظام الانضباط الموحد <span class="text-slate-400 font-normal">| Unified Behavior System</span>
+                </h1>
+                <p class="text-xs text-slate-400">الصفوف 9 - 12 | Grades 9 - 12 (Islamic & KSA Studies)</p>
             </div>
 
-            <!-- Subject Selector & Export -->
+            <!-- Subject Selector & Export & Reset Actions -->
             <div class="flex flex-wrap items-center gap-2 text-xs">
                 <span class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg">التربية الإسلامية | Islamic</span>
                 <span class="bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">الدراسات السعودية | KSA</span>
+                
+                <button onclick="resetAllScores()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                    <i class="fa-solid fa-rotate-right"></i> إعادة ضبط | Reset
+                </button>
+                
                 <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
                     <i class="fa-solid fa-file-excel"></i> تصدير Excel | Export
                 </button>
@@ -49,17 +42,17 @@
         </div>
     </header>
 
-    <!-- Content Area -->
+    <!-- Content Area (Light Theme Container) -->
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
         
         <!-- Controls Bar -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث بالاسم أو الرقم... / Search..." class="w-full md:w-80 bg-slate-900 border border-slate-600 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-blue-500">
+                <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث بالاسم أو الرقم... / Search..." class="w-full md:w-80 bg-white border border-slate-300 text-slate-900 text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-blue-500">
             </div>
 
             <div class="flex items-center gap-2 w-full md:w-auto">
-                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 w-full justify-center">
+                <label class="cursor-pointer bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 w-full justify-center">
                     <i class="fa-solid fa-upload"></i>
                     <span>رفع ملف | Upload File</span>
                     <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
@@ -69,15 +62,14 @@
 
         <!-- Dashboard Metrics -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl">
-                <span class="text-xs text-slate-400 block">إجمالي الطلاب | Total Students</span>
-                <span id="studentCount" class="text-xl font-bold text-white">23</span>
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                <span class="text-xs text-slate-500 block">إجمالي الطلاب | Total Students</span>
+                <span id="studentCount" class="text-xl font-bold text-slate-800">23</span>
             </div>
-            <div class="bg-slate-800 border border-emerald-500/30 p-3 rounded-xl">
-                <span class="text-xs text-emerald-400 block">إجمالي كوينز | Total Coins</span>
-                <span id="totalCoinsCount" class="text-xl font-bold text-emerald-400">0</span>
+            <div class="bg-slate-50 border border-emerald-500/30 p-3 rounded-xl">
+                <span class="text-xs text-emerald-600 block">إجمالي كوينز | Total Coins</span>
+                <span id="totalCoinsCount" class="text-xl font-bold text-emerald-600">0</span>
             </div>
-            <!-- Additional metrics can be placed here -->
         </div>
 
         <!-- Student Cards Section -->
@@ -88,8 +80,7 @@
     </main>
 
     <script>
-        // Student Data - Added netChange and coins tracking
-        let students = [
+        let initialStudents = [
             { id: "11216", name: "Arsalan Latif", score: 20, netChange: 0, coins: 0 },
             { id: "11501", name: "Humza Usman", score: 20, netChange: 0, coins: 0 },
             { id: "12637", name: "Abdul Moiz", score: 20, netChange: 0, coins: 0 },
@@ -115,7 +106,8 @@
             { id: "14147", name: "Zaid Alanani", score: 20, netChange: 0, coins: 0 }
         ];
 
-        // Update student score, calculate netChange for emails, and check coins
+        let students = JSON.parse(JSON.stringify(initialStudents));
+
         function updateScore(id, change) {
             let student = students.find(s => s.id === id);
             if (!student) return;
@@ -123,44 +115,42 @@
             student.score += change;
             student.netChange += change;
 
-            // 1. Email Notification for +/- 4 points
             if (student.netChange >= 4 || student.netChange <= -4) {
                 let action = student.netChange >= 4 ? "تحسن إيجابي (+4)" : "تنبيه انضباط (-4)";
                 sendEmailNotification(student, action);
-                student.netChange = 0; // Reset tracking after sending email
+                student.netChange = 0;
             }
 
-            // 2. Coin System Calculation (1 coin for every 4 points above 20)
             if (student.score > 20) {
                 let extraPoints = student.score - 20;
                 let earnedCoins = Math.floor(extraPoints / 4);
                 
                 if (earnedCoins > student.coins) {
-                    student.coins = earnedCoins;
-                    alert(`🎉 إنجاز مميز! الطالب ${student.name} حصل على كوين (Coin) جديد! الإجمالي: ${student.coins}`);
-                } else {
-                    student.coins = earnedCoins; // Adjusts downwards if they lose points
+                    alert(`🎉 إنجاز مميز! الطالب ${student.name} حصل على كوين (Coin) جديد! الإجمالي: ${earnedCoins}`);
                 }
+                student.coins = earnedCoins;
             } else {
-                student.coins = 0; // Resets coins if score drops back to 20 or below
+                student.coins = 0;
             }
 
             renderStudents();
         }
 
-        // Simulate sending email
         function sendEmailNotification(student, action) {
             const subject = encodeURIComponent(`إشعار نظام الانضباط | Behavior System - ${student.name}`);
             const body = encodeURIComponent(`الطالب / Student: ${student.name}\nرقم القيد / ID: ${student.id}\nالحالة / Status: تجاوز حد ${action}\nالرصيد الحالي / Current Score: ${student.score}`);
             
-            // Alert user that an email is being triggered
-            alert(`سيتم فتح تطبيق البريد لإرسال إشعار بخصوص الطالب ${student.name} لتجاوزه ${action}`);
-            
-            // Trigger default mail client
+            alert(`سيتم فتح البريد لإرسال إشعار بخصوص الطالب ${student.name} لتجاوزه ${action}`);
             window.location.href = `mailto:admin@school.edu?subject=${subject}&body=${body}`;
         }
 
-        // Render Cards
+        function resetAllScores() {
+            if (confirm("هل أنت تأكد من إعادة ضبط كل النقاط والكوينز للوضع الافتراضي؟")) {
+                students = JSON.parse(JSON.stringify(initialStudents));
+                renderStudents();
+            }
+        }
+
         function renderStudents(data = students) {
             const grid = document.getElementById('studentGrid');
             grid.innerHTML = '';
@@ -171,29 +161,29 @@
                 totalCoins += student.coins;
                 
                 grid.innerHTML += `
-                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 space-y-3 shadow-sm hover:border-slate-600 transition">
-                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-sm hover:border-slate-300 transition">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                             <div>
-                                <h3 class="font-bold text-sm text-white">${student.name}</h3>
+                                <h3 class="font-bold text-sm text-slate-900">${student.name}</h3>
                                 <span class="text-[10px] text-slate-400 font-mono">رقم القيد | ID: ${student.id}</span>
                             </div>
                             <div class="flex flex-col items-end">
-                                <span class="text-xs bg-slate-700 text-slate-200 px-2 py-1 rounded mb-1">الصف 9 | G9</span>
-                                ${student.coins > 0 ? `<span class="text-xs text-amber-400 font-bold px-2 bg-amber-500/10 rounded"><i class="fa-solid fa-coins"></i> ${student.coins} Coins</span>` : ''}
+                                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded mb-1">الصف 9 | G9</span>
+                                ${student.coins > 0 ? `<span class="text-xs text-amber-600 font-bold px-2 bg-amber-50 rounded"><i class="fa-solid fa-coins"></i> ${student.coins} Coins</span>` : ''}
                             </div>
                         </div>
                         <div class="flex justify-between items-center text-xs">
-                            <span class="text-slate-400">الرصيد الحالي | Balance:</span>
-                            <span class="font-bold ${student.score >= 20 ? 'text-emerald-400' : 'text-rose-400'}">${student.score} / 20.0</span>
+                            <span class="text-slate-500">الرصيد الحالي | Balance:</span>
+                            <span class="font-bold ${student.score >= 20 ? 'text-emerald-600' : 'text-rose-600'}">${student.score} / 20.0</span>
                         </div>
                         <div class="grid grid-cols-3 gap-2 text-[11px] font-semibold">
-                            <button onclick="updateScore('${student.id}', 1.0)" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-1.5 rounded transition">
+                            <button onclick="updateScore('${student.id}', 1.0)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-1.5 rounded transition">
                                 أخضر (+1.0)<br><span class="text-[9px] font-normal">Green</span>
                             </button>
-                            <button onclick="updateScore('${student.id}', -0.5)" class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 py-1.5 rounded transition">
+                            <button onclick="updateScore('${student.id}', -0.5)" class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 py-1.5 rounded transition">
                                 أصفر (-0.5)<br><span class="text-[9px] font-normal">Yellow</span>
                             </button>
-                            <button onclick="updateScore('${student.id}', -1.0)" class="bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 py-1.5 rounded transition">
+                            <button onclick="updateScore('${student.id}', -1.0)" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-1.5 rounded transition">
                                 أحمر (-1.0)<br><span class="text-[9px] font-normal">Red</span>
                             </button>
                         </div>
