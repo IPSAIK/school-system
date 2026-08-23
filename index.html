@@ -55,6 +55,14 @@
                 <button onclick="resetAllScores()" class="bg-amber-500/10 hover:bg-amber-600 text-amber-400 hover:text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition border border-amber-500/30">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i> تصفير النقاط
                 </button>
+                <!-- زر مسح جميع الطلاب -->
+                <button onclick="deleteAllStudents()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1 transition shadow">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> مسح كافة الطلاب
+                </button>
+                <!-- زر التراجع عن المسح (يظهر عند مسح الطلاب) -->
+                <button id="undo-btn" onclick="undoDeleteAll()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-2 rounded-lg text-xs font-extrabold flex items-center gap-1 transition shadow animate-pulse">
+                    <i data-lucide="undo-2" class="w-4 h-4"></i> تراجع عن المسح
+                </button>
             </div>
         </div>
     </header>
@@ -166,6 +174,14 @@
         </div>
     </main>
 
+    <!-- Toast Notification للتراجع السريع -->
+    <div id="toast-undo" class="fixed bottom-5 left-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-4 hidden border border-slate-700">
+        <span class="text-xs font-bold text-slate-200">تم مسح الطلاب من المادة الحالية.</span>
+        <button onclick="undoDeleteAll()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-3 py-1 rounded-lg text-xs font-black transition flex items-center gap-1">
+            <i data-lucide="undo-2" class="w-3.5 h-3.5"></i> تراجع الآن
+        </button>
+    </div>
+
     <!-- Modal for Behavior Selection -->
     <div id="reason-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
@@ -229,6 +245,7 @@
     <script>
         let currentSubject = 'islamic'; 
         let pendingCardAction = { studentId: null, cardType: null };
+        let deletedBackup = null; // الاحتفاظ بنسخة احتياطية للتراجع
 
         const reasonsList = {
             green: [
@@ -255,23 +272,11 @@
         };
 
         const defaultData = {
-            islamic: {
-                students: [
-                    {"id": "is_101", "name": "11216 - Arsalan Latif", "grade": "Grade 9 (الصف التاسع)", "score": 20.0, "green": 0, "yellow": 0, "red": 0},
-                    {"id": "is_102", "name": "11501 - Humza Usman", "grade": "Grade 9 (الصف التاسع)", "score": 20.0, "green": 0, "yellow": 0, "red": 0}
-                ],
-                logs: []
-            },
-            ksa: {
-                students: [
-                    {"id": "ksa_201", "name": "12003 - Faisal Ahmed", "grade": "Grade 10 (الصف العاشر)", "score": 20.0, "green": 0, "yellow": 0, "red": 0},
-                    {"id": "ksa_202", "name": "12004 - Omar Khaled", "grade": "Grade 10 (الصف العاشر)", "score": 20.0, "green": 0, "yellow": 0, "red": 0}
-                ],
-                logs: []
-            }
+            islamic: { students: [], logs: [] },
+            ksa: { students: [], logs: [] }
         };
 
-        let appData = JSON.parse(localStorage.getItem('school_data_v10')) || defaultData;
+        let appData = JSON.parse(localStorage.getItem('school_data_v12')) || defaultData;
 
         let currentEmailStudent = null;
         let currentEmailColor = null;
@@ -301,7 +306,7 @@
         }
 
         function saveData() {
-            localStorage.setItem('school_data_v10', JSON.stringify(appData));
+            localStorage.setItem('school_data_v12', JSON.stringify(appData));
             updateStats();
             renderLogs();
         }
@@ -325,32 +330,93 @@
             renderStudents();
         }
 
-        function importFromURLLink() {
-            const url = prompt("أدخل رابط ملف Excel أو Google Sheets (رابط مباشر للتحميل أو CSV):");
-            if (!url) return;
+        // مسح جميع الطلاب مع أخذ نسخة احتياطية
+        function deleteAllStudents() {
+            if (appData[currentSubject].students.length === 0) {
+                alert('القائمة فارغة بالفعل!');
+                return;
+            }
 
-            fetch(url)
-                .then(res => res.arrayBuffer())
-                .then(buffer => {
-                    const data = new Uint8Array(buffer);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
-                    let count = 0;
-                    json.forEach((row, i) => {
-                        if (i === 0 && (row[0]?.toString().includes('اسم') || row[0]?.toString().toLowerCase().includes('name'))) return;
-                        if (row[0]) {
-                            appData[currentSubject].students.push({
-                                id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                                name: row[0].toString().trim(),
-                                grade: row[1] ? row[1].toString().trim() : "Grade 9 (الصف التاسع)",
-                                score: 20.0, green: 0, yellow: 0, red: 0
-                            });
-                            count++;
+            if(confirm(`⚠️ هل أنت تأكد من مسح جميع الطلاب كلياً لمادة (${currentSubject.toUpperCase()})؟`)) {
+                // حفظ النسخة الاحتياطية للتراجع
+                deletedBackup = {
+                    subject: currentSubject,
+                    students: JSON.parse(JSON.stringify(appData[currentSubject].students)),
+                    logs: JSON.parse(JSON.stringify(appData[currentSubject].logs))
+                };
+
+                appData[currentSubject].students = [];
+                appData[currentSubject].logs = [];
+                saveData();
+                renderStudents();
+
+                // إظهار أزرار التراجع
+                document.getElementById('undo-btn').classList.remove('hidden');
+                const toast = document.getElementById('toast-undo');
+                toast.classList.remove('hidden');
+
+                // إخفاء التنبيه التلقائي بعد 10 ثوانٍ
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 10000);
+            }
+        }
+
+        // دالة التراجع عن مسح الطلاب
+        function undoDeleteAll() {
+            if (!deletedBackup) return;
+
+            appData[deletedBackup.subject].students = deletedBackup.students;
+            appData[deletedBackup.subject].logs = deletedBackup.logs;
+            
+            deletedBackup = null;
+            saveData();
+            renderStudents();
+
+            document.getElementById('undo-btn').classList.add('hidden');
+            document.getElementById('toast-undo').classList.add('hidden');
+            alert('تم استعادة جميع الطلاب والسجلات بنجاح!');
+        }
+
+        function processExcelFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                let count = 0;
+
+                json.forEach((row) => {
+                    let nameVal = '';
+                    let gradeVal = 'Grade 9 (الصف التاسع)';
+
+                    if (row && row.length > 0) {
+                        for (let col = 0; col < row.length; col++) {
+                            let cell = row[col] ? row[col].toString().trim() : '';
+                            if (cell && isNaN(cell) && !cell.includes('اسم') && !cell.toLowerCase().includes('name')) {
+                                nameVal = cell;
+                                if (row[col + 1]) gradeVal = row[col + 1].toString().trim();
+                                break;
+                            }
                         }
-                    });
-                    saveData(); renderStudents(); alert(`تم استيراد ${count} طالب بنجاح!`);
-                })
-                .catch(err => alert("تعذر استيراد البيانات من الرابط. تأكد من أن الرابط مباشر وصالح."));
+                    }
+
+                    if (nameVal !== '' && nameVal.length > 1) {
+                        appData[currentSubject].students.push({
+                            id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                            name: nameVal,
+                            grade: gradeVal,
+                            score: 20.0, green: 0, yellow: 0, red: 0
+                        });
+                        count++;
+                    }
+                });
+
+                saveData(); 
+                renderStudents(); 
+                alert(`تم استيراد ${count} طالب بنجاح وترشيح الأسطر الفارغة!`);
+            };
+            reader.readAsArrayBuffer(file);
         }
 
         function handleFileUpload(event) {
@@ -365,37 +431,13 @@
             event.target.value = '';
         }
 
-        function processExcelFile(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
-                let count = 0;
-                json.forEach((row, i) => {
-                    if (i === 0 && (row[0]?.toString().includes('اسم') || row[0]?.toString().toLowerCase().includes('name'))) return;
-                    if (row[0]) {
-                        appData[currentSubject].students.push({
-                            id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                            name: row[0].toString().trim(),
-                            grade: row[1] ? row[1].toString().trim() : "Grade 9 (الصف التاسع)",
-                            score: 20.0, green: 0, yellow: 0, red: 0
-                        });
-                        count++;
-                    }
-                });
-                saveData(); renderStudents(); alert(`تم استيراد ${count} طالب إلى مادة (${currentSubject.toUpperCase()}).`);
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
         function processWordFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 mammoth.extractRawText({ arrayBuffer: e.target.result }).then(function(result) {
                     let count = 0;
                     result.value.split('\n').forEach(line => {
-                        if (line.trim()) {
+                        if (line.trim() && line.trim().length > 1) {
                             appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
                             count++;
                         }
@@ -411,7 +453,7 @@
             reader.onload = function(e) {
                 let count = 0;
                 e.target.result.split('\n').forEach(line => {
-                    if (line.trim()) {
+                    if (line.trim() && line.trim().length > 1) {
                         appData[currentSubject].students.push({ id: Date.now().toString() + Math.random().toString(36).substr(2, 4), name: line.trim(), grade: "Grade 9 (الصف التاسع)", score: 20.0, green: 0, yellow: 0, red: 0 });
                         count++;
                     }
@@ -421,12 +463,38 @@
             reader.readAsText(file);
         }
 
+        function importFromURLLink() {
+            const url = prompt("أدخل رابط ملف Excel أو Google Sheets (رابط مباشر):");
+            if (!url) return;
+
+            fetch(url)
+                .then(res => res.arrayBuffer())
+                .then(buffer => {
+                    const data = new Uint8Array(buffer);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                    let count = 0;
+                    json.forEach((row) => {
+                        if (row[0] && row[0].toString().trim().length > 1 && !row[0].toString().includes('اسم')) {
+                            appData[currentSubject].students.push({
+                                id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                                name: row[0].toString().trim(),
+                                grade: row[1] ? row[1].toString().trim() : "Grade 9 (الصف التاسع)",
+                                score: 20.0, green: 0, yellow: 0, red: 0
+                            });
+                            count++;
+                        }
+                    });
+                    saveData(); renderStudents(); alert(`تم استيراد ${count} طالب بنجاح!`);
+                })
+                .catch(() => alert("تعذر استيراد البيانات من الرابط."));
+        }
+
         function openReasonModal(studentId, cardType) {
             const student = appData[currentSubject].students.find(s => s.id === studentId);
             if (!student) return;
 
             pendingCardAction = { studentId, cardType };
-
             const select = document.getElementById('reason-select');
             select.innerHTML = '';
             
@@ -469,7 +537,6 @@
             const now = new Date();
             const timestamp = now.toLocaleDateString('en-GB') + ' - ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             let cardName = '', badgeClass = '';
-
             const greenPoints = currentSubject === 'islamic' ? 1.0 : 0.5;
 
             if (cardType === 'green') {
@@ -604,7 +671,7 @@
             const greenPointsLabel = currentSubject === 'islamic' ? '+1.0' : '+0.5';
 
             if(filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-xl text-center text-slate-400 border border-dashed border-slate-300 font-medium">لا يوجد طلاب لهذه المادة / الصف.</div>`;
+                container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-xl text-center text-slate-400 border border-dashed border-slate-300 font-medium">لا يوجد طلاب لهذه المادة / الصف. قم برفع ملف Excel محدد بشكل صحيح.</div>`;
                 updateStats(); return;
             }
 
