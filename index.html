@@ -3,113 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام انضباط وتقييم الفصل | IPS Discipline & Evaluation System</title>
+    <title>نظام الانضباط الموحد | Behavior System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
 
-    <!-- Header Section / قسم الهيدر وشعار المدرسة -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4">
-                <!-- Logo -->
-                <img src="unnamed.jpg" alt="IPS Logo" class="h-16 w-auto object-contain rounded-lg border border-slate-100 p-1 shadow-sm">
+    <!-- Header Section / قسم الهيدر باللغتين -->
+    <header class="bg-slate-800 border-b border-slate-700 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            
+            <!-- Logo & Title / اللوقو والعنوان -->
+            <div class="flex items-center gap-3">
+                <div class="bg-white p-1 rounded-lg border border-slate-600 flex items-center justify-center shadow">
+                    <svg width="42" height="42" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 10 C50 10 10 50 10 100 C10 150 50 190 100 190 C150 190 190 150 190 100 C190 50 150 10 100 10 Z" fill="#FFFFFF"/>
+                        <path d="M100 25 C135 25 165 45 175 75 C160 60 130 50 100 50 C70 50 40 60 25 75 C35 45 65 25 100 25 Z" fill="#03254C"/>
+                        <text x="100" y="115" font-family="Arial, sans-serif" font-weight="900" font-size="48" fill="#113F67" text-anchor="middle">IPS</text>
+                        <path d="M40 130 C60 155 140 155 160 130" stroke="#B8860B" stroke-width="6" fill="none"/>
+                        <text x="100" y="175" font-family="Cairo, sans-serif" font-weight="bold" font-size="12" fill="#113F67" text-anchor="middle">مدرسة البرامج العالمية</text>
+                    </svg>
+                </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">
-                        نظام انضباط وتقييم الفصل
-                        <span class="block text-sm font-semibold text-blue-900">Class Discipline & Evaluation System</span>
+                    <h1 class="text-base md:text-lg font-bold flex items-center gap-2">
+                        نظام الانضباط الموحد <span class="text-slate-400 font-normal">| Behavior System</span>
                     </h1>
-                    <p class="text-xs text-slate-500 mt-1">
-                        توثيق البطاقات والدرجات بالوقت والتاريخ | Real-time Cards & Grade Logging with Timestamp
-                    </p>
+                    <p class="text-xs text-slate-400">الصفوف 9 - 12 | Islamic Studies & KSA Studies (Grades 9 - 12)</p>
                 </div>
             </div>
 
-            <!-- Header Quick Actions -->
-            <div class="flex items-center gap-2">
-                <label class="cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">
-                    <i class="fa-solid fa-file-import"></i>
-                    <span>رفع قائمة الطلاب (Excel) / Import Students</span>
-                    <input type="file" id="excelInput" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleFileUpload(event)">
-                </label>
+            <!-- Subject Badges & Actions / المواد والأزرار باللغتين -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg border border-blue-500">
+                    التربية الإسلامية | Islamic Studies
+                </span>
+                <span class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-600 cursor-pointer">
+                    الدراسات السعودية | KSA Studies
+                </span>
+                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>تصدير | Export Excel</span>
+                </button>
+                <button onclick="resetPoints()" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>تصفير النقاط | Reset Points</span>
+                </button>
+                <button onclick="clearAllStudents()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>مسح الطلاب | Clear All</span>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- Student List & Quick Actions / قائمة الطلاب والأفعال السريعة -->
-        <section class="lg:col-span-2 space-y-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 class="font-bold text-slate-800 text-lg">قائمة الطلاب | Student Roster</h2>
-                    <p class="text-xs text-slate-500">إجمالي الطلاب: <span id="studentCount" class="font-bold text-blue-900">0</span> Students</p>
+        <!-- Filter & Control Bar / شريط التحكم باللغتين -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
+            
+            <!-- Search & Grade Filter -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full sm:w-64">
+                    <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث بالاسم... / Search by name..." class="w-full bg-slate-900 border border-slate-600 text-white text-xs pr-8 pl-3 py-2 rounded-lg focus:outline-none focus:border-blue-500">
+                    <i class="fa-solid fa-magnifying-glass absolute right-2.5 top-2.5 text-slate-500 text-xs"></i>
                 </div>
-                <div class="flex gap-2 w-full sm:w-auto">
-                    <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث باسم الطالب أو ID / Search..." class="w-full sm:w-64 px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800">
+                <div class="flex items-center gap-2 text-xs text-slate-300">
+                    <span>تصفية حسب الصف | Grade Filter:</span>
+                    <select id="gradeSelect" onchange="filterStudents()" class="bg-slate-900 border border-slate-600 text-white px-2 py-1.5 rounded-lg focus:outline-none">
+                        <option value="all">جميع الصفوف | All Grades</option>
+                        <option value="Grade 9">Grade 9 (الصف التاسع)</option>
+                        <option value="Grade 10">Grade 10 (الصف العاشر)</option>
+                        <option value="Grade 11">Grade 11 (الصف الحادي عشر)</option>
+                        <option value="Grade 12">Grade 12 (الصف الثاني عشر)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Import Options -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                    <span>رفع ملف | Upload File (Excel / Word)</span>
+                    <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
+                </label>
+            </div>
+        </div>
+
+        <!-- Dashboard Metrics / الإحصائيات باللغتين -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow">
+                <span class="text-xs text-slate-400 block mb-1">طلاب المادة حالياً | Current Students</span>
+                <span id="studentCount" class="text-2xl font-bold text-white">23</span>
+            </div>
+            <div class="bg-slate-800 border border-emerald-500/30 p-4 rounded-xl shadow">
+                <span class="text-xs text-emerald-400 block mb-1">بطاقات خضراء | Green Cards (+1.0)</span>
+                <span id="greenCount" class="text-2xl font-bold text-emerald-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-amber-500/30 p-4 rounded-xl shadow">
+                <span class="text-xs text-amber-400 block mb-1">بطاقات صفراء | Yellow Cards (-0.5)</span>
+                <span id="yellowCount" class="text-2xl font-bold text-amber-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-rose-500/30 p-4 rounded-xl shadow">
+                <span class="text-xs text-rose-400 block mb-1">بطاقات حمراء | Red Cards (-1.0)</span>
+                <span id="redCount" class="text-2xl font-bold text-rose-400">0</span>
+            </div>
+        </div>
+
+        <!-- Main Workspace (Cards & Logs) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Student Cards Roster / بطاقات الطلاب -->
+            <div class="lg:col-span-2 space-y-4">
+                <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Dynamically Rendered -->
                 </div>
             </div>
 
-            <!-- Student Grid -->
-            <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <!-- Dynamically populated student cards -->
-            </div>
-        </section>
+            <!-- Activity Log & Timestamps / سجل التوثيق بالوقت والتاريخ -->
+            <div class="space-y-4">
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-3">
+                        <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+                            سجل التوثيق | Audit Log (Islamic Studies)
+                        </h2>
+                        <span id="logCount" class="bg-slate-700 text-slate-300 text-[10px] font-mono px-2 py-0.5 rounded">0</span>
+                    </div>
 
-        <!-- Audit Log & Timestamps / سجل التوثيق بالوقت والتاريخ -->
-        <section class="space-y-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-center mb-3 border-b pb-2">
-                    <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-blue-900"></i>
-                        توثيق الأنشطة بالوقت والتاريخ
-                    </h2>
-                    <span class="text-xs text-slate-400 font-mono">Real-time Log</span>
-                </div>
-                <p class="text-xs text-slate-500 mb-3">Activity & Grade Timestamps</p>
-
-                <!-- Activity Log Container -->
-                <div id="logContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1 text-xs">
-                    <div class="text-center text-slate-400 py-8">لا توجد سجلات بعد <br> No logs recorded yet</div>
+                    <!-- Timestamps Area -->
+                    <div id="logContainer" class="space-y-2 max-h-[500px] overflow-y-auto pr-1 text-xs">
+                        <div class="text-center text-slate-500 py-12">
+                            لا توجد سجلات بعد <br>
+                            <span class="text-[10px]">No activity logs recorded yet</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+
+        </div>
 
     </main>
 
     <script>
-        // Sample Initial Data (23 Students)
+        // Data list (23 Students)
         let students = [
-            { id: "11216", name: "Arsalan Latif", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11501", name: "Humza Usman", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12637", name: "Abdul Moiz", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12803", name: "Abdullah Zeeshan", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13743", name: "Arka Albriza", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13837", name: "Ayyub Abdulmetin Taghiyev", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13468", name: "Yousef Al Ansari", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11289", "name": "Yousuf Bahlool", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "11961", name: "Zaid Khandakji", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12454", name: "Adam Itani", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "12562", name: "Abdullah Alsanie", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13393", name: "Saim Khan", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13569", name: "Ferris Belkerdid", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "13964", name: "Yahia Elghannam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14017", name: "Juman Moati", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14274", name: "Mehmet Ozyilmaz", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14306", name: "Owais Azzam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14302", name: "Ayham Azzam", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14426", name: "Abdullah Fahad", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "00810", name: "Shayan Hussain", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14454", name: "Jandre Zakula", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14423", name: "Seyun Kim", score: 20, green: 0, yellow: 0, red: 0 },
-            { id: "14147", name: "Zaid Alanani", score: 20, green: 0, yellow: 0, red: 0 }
+            { id: "11216", name: "Arsalan Latif", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "11501", name: "Humza Usman", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "12637", name: "Abdul Moiz", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "12803", name: "Abdullah Zeeshan", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13743", name: "Arka Albriza", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13837", name: "Ayyub Abdulmetin Taghiyev", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13468", name: "Yousef Al Ansari", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "11289", name: "Yousuf Bahlool", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "11961", name: "Zaid Khandakji", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "12454", name: "Adam Itani", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "12562", name: "Abdullah Alsanie", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13393", name: "Saim Khan", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13569", name: "Ferris Belkerdid", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "13964", name: "Yahia Elghannam", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14017", name: "Juman Moati", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14274", name: "Mehmet Ozyilmaz", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14306", name: "Owais Azzam", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14302", name: "Ayham Azzam", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14426", name: "Abdullah Fahad", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "00810", name: "Shayan Hussain", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14454", name: "Jandre Zakula", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14423", name: "Seyun Kim", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 },
+            { id: "14147", name: "Zaid Alanani", grade: "Grade 9", score: 20, green: 0, yellow: 0, red: 0 }
         ];
 
         let logs = [];
@@ -119,36 +185,52 @@
             document.getElementById('studentCount').innerText = data.length;
             grid.innerHTML = '';
 
-            data.forEach(student => {
-                const card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between gap-3";
-                card.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">ID: ${student.id}</span>
-                            <h3 class="font-bold text-slate-800 text-sm mt-1">${student.name}</h3>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-slate-400 block">الدرجة | Score</span>
-                            <span class="text-base font-bold ${student.score >= 15 ? 'text-emerald-600' : 'text-rose-600'}">${student.score}</span>
-                        </div>
-                    </div>
+            let totalGreen = 0, totalYellow = 0, totalRed = 0;
 
-                    <!-- Cards Counters / بطاقات الانضباط -->
-                    <div class="flex gap-1 justify-between bg-slate-50 p-1.5 rounded-lg text-center text-xs">
-                        <button onclick="addCard('${student.id}', 'green')" class="flex-1 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded font-semibold transition">
-                            🟢 🟢 الممتازة (${student.green})
+            data.forEach(student => {
+                totalGreen += student.green;
+                totalYellow += student.yellow;
+                totalRed += student.red;
+
+                grid.innerHTML += `
+                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 space-y-3 relative group">
+                        <button onclick="removeStudent('${student.id}')" class="absolute top-3 left-3 text-slate-500 hover:text-rose-400 text-xs transition">
+                            <i class="fa-solid fa-xmark"></i>
                         </button>
-                        <button onclick="addCard('${student.id}', 'yellow')" class="flex-1 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded font-semibold transition">
-                            🟡 تنبيه (${student.yellow})
-                        </button>
-                        <button onclick="addCard('${student.id}', 'red')" class="flex-1 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded font-semibold transition">
-                            🔴 مخالفة (${student.red})
-                        </button>
+                        <div class="flex justify-between items-start pl-6">
+                            <div>
+                                <h3 class="font-bold text-sm text-white">${student.name}</h3>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-slate-400">الصف | Grade:</span>
+                                    <span class="text-xs text-blue-400 font-semibold">${student.grade}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/60 p-2.5 rounded-lg flex justify-between items-center text-xs">
+                            <span class="text-slate-400">الرصيد | Balance:</span>
+                            <span class="font-mono font-bold text-sm ${student.score >= 15 ? 'text-emerald-400' : 'text-rose-400'}">${student.score.toFixed(1)} / 20.0</span>
+                        </div>
+
+                        <!-- Card Buttons with English & Arabic Labels -->
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="addCard('${student.id}', 'green')" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-2 rounded text-center transition">
+                                🟢 أخضر (+1.0)<br><span class="font-normal text-[9px]">Green</span>
+                            </button>
+                            <button onclick="addCard('${student.id}', 'yellow')" class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 py-2 rounded text-center transition">
+                                🟡 أصفر (-0.5)<br><span class="font-normal text-[9px]">Yellow</span>
+                            </button>
+                            <button onclick="addCard('${student.id}', 'red')" class="bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 py-2 rounded text-center transition">
+                                🔴 أحمر (-1.0)<br><span class="font-normal text-[9px]">Red</span>
+                            </button>
+                        </div>
                     </div>
                 `;
-                grid.appendChild(card);
             });
+
+            document.getElementById('greenCount').innerText = totalGreen;
+            document.getElementById('yellowCount').innerText = totalYellow;
+            document.getElementById('redCount').innerText = totalRed;
         }
 
         function addCard(studentId, type) {
@@ -156,24 +238,23 @@
             if (!student) return;
 
             const now = new Date();
-            const timestamp = now.toLocaleDateString('ar-SA') + ' ' + now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
+            const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
             let actionText = "";
-            if(type === 'green') {
+            if (type === 'green') {
                 student.green++;
-                student.score += 1;
-                actionText = "بطاقة إيجابية (+1) | Green Card (+1)";
-            } else if(type === 'yellow') {
+                student.score += 1.0;
+                actionText = "بطاقة خضراء (+1.0) | Green Card (+1.0)";
+            } else if (type === 'yellow') {
                 student.yellow++;
-                student.score -= 1;
-                actionText = "بطاقة صفراء (-1) | Yellow Card (-1)";
-            } else if(type === 'red') {
+                student.score -= 0.5;
+                actionText = "بطاقة صفراء (-0.5) | Yellow Card (-0.5)";
+            } else if (type === 'red') {
                 student.red++;
-                student.score -= 2;
-                actionText = "بطاقة حمراء (-2) | Red Card (-2)";
+                student.score -= 1.0;
+                actionText = "بطاقة حمراء (-1.0) | Red Card (-1.0)";
             }
 
-            // Log event with timestamp
             logs.unshift({
                 studentName: student.name,
                 studentId: student.id,
@@ -186,15 +267,16 @@
         }
 
         function renderLogs() {
-            const logContainer = document.getElementById('logContainer');
-            if(logs.length === 0) return;
+            const container = document.getElementById('logContainer');
+            document.getElementById('logCount').innerText = logs.length;
 
-            logContainer.innerHTML = logs.map(log => `
-                <div class="p-2 bg-slate-50 rounded border-r-4 border-blue-900 flex justify-between items-center text-xs">
+            if (logs.length === 0) return;
+
+            container.innerHTML = logs.map(log => `
+                <div class="p-2.5 bg-slate-900/80 rounded-lg border-r-4 border-blue-500 flex justify-between items-start text-xs">
                     <div>
-                        <span class="font-bold text-slate-800">${log.studentName}</span>
-                        <span class="text-slate-400 text-[10px]">(${log.studentId})</span>
-                        <p class="text-blue-900 font-semibold">${log.action}</p>
+                        <span class="font-bold text-slate-200">${log.studentName}</span>
+                        <p class="text-blue-400 font-semibold text-[11px] mt-0.5">${log.action}</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-mono">${log.time}</span>
                 </div>
@@ -203,11 +285,56 @@
 
         function filterStudents() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = students.filter(s => s.name.toLowerCase().includes(term) || s.id.includes(term));
+            const grade = document.getElementById('gradeSelect').value;
+
+            const filtered = students.filter(s => {
+                const matchesName = s.name.toLowerCase().includes(term) || s.id.includes(term);
+                const matchesGrade = grade === 'all' || s.grade === grade;
+                return matchesName && matchesGrade;
+            });
+
             renderStudents(filtered);
         }
 
-        function handleFileUpload(event) {
+        function removeStudent(id) {
+            students = students.filter(s => s.id !== id);
+            renderStudents();
+        }
+
+        function resetPoints() {
+            if(confirm("هل أنت تأكد من تصفير رصيد وبطاقات جميع الطلاب؟\nAre you sure you want to reset all points?")) {
+                students.forEach(s => { s.score = 20; s.green = 0; s.yellow = 0; s.red = 0; });
+                logs = [];
+                renderStudents();
+                renderLogs();
+            }
+        }
+
+        function clearAllStudents() {
+            if(confirm("هل أنت تأكد من مسح جميع الطلاب من القائمة؟\nAre you sure you want to clear all students?")) {
+                students = [];
+                logs = [];
+                renderStudents();
+                renderLogs();
+            }
+        }
+
+        function exportToExcel() {
+            const worksheet = XLSX.utils.json_to_sheet(students.map(s => ({
+                "ID": s.id,
+                "Student Name": s.name,
+                "Grade": s.grade,
+                "Score": s.score,
+                "Green Cards": s.green,
+                "Yellow Cards": s.yellow,
+                "Red Cards": s.red
+            })));
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Behavior System");
+            XLSX.writeFile(workbook, "IPS_Behavior_Report.xlsx");
+        }
+
+        function importExcel(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -215,181 +342,24 @@
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, {type: 'array'});
-                const sheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(worksheet);
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(sheet);
 
-                students = json.map(row => ({
-                    id: String(row.ID || row.Id || row["المعرف"] || row["الرقم الجامعي"] || Math.floor(Math.random() * 89999 + 10000)),
-                    name: row.Name || row.name || row["اسم الطالب"] || row["الاسم"] || "Un-named Student",
+                students = json.map(r => ({
+                    id: String(r.ID || r.id || r["المعرف"] || Math.floor(Math.random() * 89999 + 10000)),
+                    name: r.Name || r.name || r["اسم الطالب"] || "Unknown",
+                    grade: r.Grade || r.grade || "Grade 9",
                     score: 20,
                     green: 0,
                     yellow: 0,
                     red: 0
                 }));
-
                 renderStudents();
             };
             reader.readAsArrayBuffer(file);
         }
 
-        // Initial Render
-        renderStudents();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الانضباط الموحد | Behavior System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-    </style>
-</head>
-
-<body class="bg-slate-900 text-slate-100 min-h-screen">
-
-    <!-- Header Section / الهيدر مع اللوقو المدمج -->
-    <header class="bg-slate-800 border-b border-slate-700 shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-            
-            <div class="flex items-center gap-3">
-                <!-- IPS Logo Container (Embedded Base64 / SVG) -->
-                <div class="bg-white p-1 rounded-lg border border-slate-600 flex items-center justify-center shadow">
-                    <svg width="42" height="42" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 10 C50 10 10 50 10 100 C10 150 50 190 100 190 C150 190 190 150 190 100 C190 50 150 10 100 10 Z" fill="#FFFFFF"/>
-                        <path d="M100 25 C135 25 165 45 175 75 C160 60 130 50 100 50 C70 50 40 60 25 75 C35 45 65 25 100 25 Z" fill="#03254C"/>
-                        <text x="100" y="115" font-family="Arial, sans-serif" font-weight="900" font-size="48" fill="#113F67" text-anchor="middle">IPS</text>
-                        <path d="M40 130 C60 155 140 155 160 130" stroke="#B8860B" stroke-width="6" fill="none"/>
-                        <text x="100" y="175" font-family="Cairo, sans-serif" font-weight="bold" font-size="12" fill="#113F67" text-anchor="middle">مدرسة البرامج العالمية</text>
-                    </svg>
-                </div>
-
-                <div>
-                    <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
-                        نظام الانضباط الموحد <span class="text-slate-400 font-normal">| Behavior System</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">الصفوف 9 - 12 | Islamic Studies & KSA Studies</p>
-                </div>
-            </div>
-
-            <!-- Subject Selector & Reset Actions -->
-            <div class="flex flex-wrap items-center gap-2 text-xs">
-                <span class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg">التربية الإسلامية (Islamic)</span>
-                <span class="bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">الدراسات السعودية (KSA)</span>
-                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
-                    <i class="fa-solid fa-file-excel"></i> تصدير Excel
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Content Area -->
-    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        
-        <!-- Controls Bar -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <input type="text" id="searchInput" oninput="filterStudents()" placeholder="بحث بالاسم... / Search..." class="w-full md:w-64 bg-slate-900 border border-slate-600 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-blue-500">
-            </div>
-
-            <div class="flex items-center gap-2 w-full md:w-auto">
-                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 w-full justify-center">
-                    <i class="fa-solid fa-upload"></i>
-                    <span>رفع ملف (Excel / Word)</span>
-                    <input type="file" accept=".xlsx, .xls, .csv" class="hidden" onchange="importExcel(event)">
-                </label>
-            </div>
-        </div>
-
-        <!-- Dashboard Metrics -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl">
-                <span class="text-xs text-slate-400 block">طلاب المادة حالياً</span>
-                <span id="studentCount" class="text-xl font-bold text-white">23</span>
-            </div>
-            <div class="bg-slate-800 border border-emerald-500/30 p-3 rounded-xl">
-                <span class="text-xs text-emerald-400 block">بطاقات خضراء (+1.0)</span>
-                <span id="greenCount" class="text-xl font-bold text-emerald-400">0</span>
-            </div>
-            <div class="bg-slate-800 border border-amber-500/30 p-3 rounded-xl">
-                <span class="text-xs text-amber-400 block">بطاقات صفراء (-0.5)</span>
-                <span id="yellowCount" class="text-xl font-bold text-amber-400">0</span>
-            </div>
-            <div class="bg-slate-800 border border-rose-500/30 p-3 rounded-xl">
-                <span class="text-xs text-rose-400 block">بطاقات حمراء (-1.0)</span>
-                <span id="redCount" class="text-xl font-bold text-rose-400">0</span>
-            </div>
-        </div>
-
-        <!-- Student Cards Section -->
-        <div id="studentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Dynamically Rendered Student Cards -->
-        </div>
-
-    </main>
-
-    <script>
-        // JS Logic with student list rendering
-        let students = [
-            { id: "11216", name: "Arsalan Latif", score: 20 },
-            { id: "11501", name: "Humza Usman", score: 20 },
-            { id: "12637", name: "Abdul Moiz", score: 20 },
-            { id: "12803", name: "Abdullah Zeeshan", score: 20 },
-            { id: "13743", name: "Arka Albriza", score: 20 },
-            { id: "13837", name: "Ayyub Abdulmetin Taghiyev", score: 20 },
-            { id: "13468", name: "Yousef Al Ansari", score: 20 },
-            { id: "11289", name: "Yousuf Bahlool", score: 20 },
-            { id: "11961", name: "Zaid Khandakji", score: 20 },
-            { id: "12454", name: "Adam Itani", score: 20 },
-            { id: "12562", name: "Abdullah Alsanie", score: 20 },
-            { id: "13393", name: "Saim Khan", score: 20 },
-            { id: "13569", name: "Ferris Belkerdid", score: 20 },
-            { id: "13964", name: "Yahia Elghannam", score: 20 },
-            { id: "14017", name: "Juman Moati", score: 20 },
-            { id: "14274", name: "Mehmet Ozyilmaz", score: 20 },
-            { id: "14306", name: "Owais Azzam", score: 20 },
-            { id: "14302", name: "Ayham Azzam", score: 20 },
-            { id: "14426", name: "Abdullah Fahad", score: 20 },
-            { id: "00810", name: "Shayan Hussain", score: 20 },
-            { id: "14454", name: "Jandre Zakula", score: 20 },
-            { id: "14423", name: "Seyun Kim", score: 20 },
-            { id: "14147", name: "Zaid Alanani", score: 20 }
-        ];
-
-        function renderStudents(data = students) {
-            const grid = document.getElementById('studentGrid');
-            grid.innerHTML = '';
-            data.forEach(student => {
-                grid.innerHTML += `
-                    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 space-y-3">
-                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                            <div>
-                                <h3 class="font-bold text-sm text-white">${student.name}</h3>
-                                <span class="text-[10px] text-slate-400 font-mono">ID: ${student.id}</span>
-                            </div>
-                            <span class="text-xs bg-slate-700 text-slate-200 px-2 py-1 rounded">Grade 9</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-slate-400">الرصيد:</span>
-                            <span class="font-bold text-emerald-400">${student.score} / 20.0</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 text-[11px] font-semibold">
-                            <button class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 py-1.5 rounded transition">أخضر (+1.0)</button>
-                            <button class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 py-1.5 rounded transition">أصفر (-0.5)</button>
-                            <button class="bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 py-1.5 rounded transition">أحمر (-1.0)</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
+        // Initial Load
         renderStudents();
     </script>
 </body>
